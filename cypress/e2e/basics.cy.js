@@ -35,7 +35,7 @@ describe("Wikipedia Test Suite", () => {
 
   });
 
-  it("Should click the English language element and check the URL", () => {
+  it("Should click the English language element and check the URL and some sub-text", () => {
     cy.get(".central-featured-lang.lang1").click();
 
     // After clicking, check if the URL has changed to the English Wikipedia page
