@@ -106,7 +106,7 @@ function expandDropdownIfNotExpanded(selector) {
 }
 
 export const setRadioButtonState=(selector, shouldBeEnabled) =>{
-  cy.get(selector + LOCATORS.radioButton).then(($input) => { //locator
+  cy.get(selector + LOCATORS.radioButton).then(($input) => { 
     const isChecked = $input.is(':checked');
     if (isChecked !== shouldBeEnabled) {
       cy.get(selector).click();
@@ -126,11 +126,8 @@ export function assertRuleTableContent(){
       [LOCATORS.platformCell]: record.osType,
       [LOCATORS.connectedCell]: record.connected,
     };
-
     assertCellContent(row, cellData);
   });
-
-
 }
 
 export function assertCellContent(row, data) {
@@ -177,7 +174,7 @@ export function addNewRule(ruleData) {
 
 export function deleteRowByIndex(rowIndex) {
   // Select the three-dot option in the specified row and click it
-  cy.get(LOCATORS.tableTr) //locator
+  cy.get(LOCATORS.tableTr) 
     .eq(rowIndex) // Select the specific row by index
     .find(LOCATORS.optionsButton)
     .click();
@@ -188,7 +185,6 @@ export function deleteRowByIndex(rowIndex) {
   cy.get(LOCATORS.deleteDialog)
   .contains('button', 'Delete')
   .click();
-
 }
 
 export function assertSavedSuccessfully() {
