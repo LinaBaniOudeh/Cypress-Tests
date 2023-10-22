@@ -1,4 +1,5 @@
 
+import './commands'
 export const SAVE_MESSAGE = 'Saved successfully'
 
 export const LOCATORS = {
@@ -27,11 +28,11 @@ sdpUserInput:'[data-testid="entityautocompletefieldprops-inputuser"] [placeholde
 listBox:'.MuiV5-Autocomplete-listbox li',
 sdpIPInput:'[data-testid="entitytextinputfield-root-ip-input"] [placeholder="Insert IP from defined range"]',
 addButton:'button.MuiV5-Button-containedSizeMedium',
-dropdownListButton:'[data-testid="entityautocompletefieldprops-root-user"] button',
+dropdownListButton:'[data-testid="ArrowDropDownIcon"]',
 deleteUserButton:'button[data-testid="table-btn-delete-row"]',
 tableTr:'table tr',
-overrideButton:'[data-testid="catodialog-actions"] > .MuiButton-contained > .MuiButton-label'
-
+overrideButton:'[data-testid="catodialog-actions"] > .MuiButton-contained > .MuiButton-label',
+//[placeholder="Search or select SDP User"]
 }
 
 export function navigateToIpAllocation(){
@@ -88,19 +89,19 @@ export function typeValidInput(selector, value){
 export function assertSave(message) {
     // Save and assert pop-up message
     cy.get(LOCATORS.saveButton).click();
-    cy.get(LOCATORS.popUpMessage)
-      .should('be.visible')
-      .contains(message); //constant
+    // cy.get(LOCATORS.popUpMessage)
+    //   .should('be.visible')
+    //   .contains(message); //constant
 }
 
-// export const setRadioButtonState=(selector, shouldBeEnabled) =>{
-//     cy.get(selector).then(($input) => { 
-//       const isChecked = $input.is(':checked');
-//       if (isChecked !== shouldBeEnabled) {
-//         cy.get(selector).click();
-//       }
-//     });
-// }
+export function assertPopUpMessage(message){
+
+    cy.get(LOCATORS.popUpMessage)
+    .scrollIntoView()
+    .should('be.visible')
+    .contains(message); //constant
+}
+
 
 export function setRadioButtonState(selector, targetValue) {
     cy.get(selector).should('have.attr', 'value').then((currentValue) => {
@@ -108,23 +109,84 @@ export function setRadioButtonState(selector, targetValue) {
         cy.get(selector).click(); // Click the switch to toggle it
       }
     });
+}
+
+
+export function chooseFromDropDown(dropdownSelector, optionText, searchSelector) {
+    cy.get(dropdownSelector).click(); // Click to open the dropdown
+  
+    // cy.get(dropdownSelector).type(optionText ,{ delay: 500 }).should('be.visible'); // Type the text to search for the option
+  
+    // Wait for the option to become visible in the dropdown list
+    cy.get(searchSelector).contains(optionText).should('be.visible').click();
   }
 
-export function chooseFromDropDown(selector,value,listbox){
-    cy.get(selector).type(value)
-    cy.contains(listbox,value).click()
-
-}
 
 export function clickButton(selector){
 
     cy.get(selector).click()
-
 }
 
+// export function deleteTable() {
+//     // Select the three-dot option in the specified row and click it
+//     // cy.get(LOCATORS.tableTr) 
+//     //   .eq(1) // Select the specific row by index
+//     //   .find(LOCATORS.deleteUserButton)
+//     //   .click();
+
+//     // cy.get(LOCATORS.tableTr).each(($row) => {
+//     //     // Click the delete button in each row to delete it
+//     //     cy.wrap($row)
+//     //       .find(LOCATORS.deleteUserButton)
+//     //       .click();
+    
+//     //     // After clicking, you can perform additional actions if needed,
+//     //     // such as confirming the delete action or checking for a confirmation message.
+//     //   });
+    
+//     cy.get('table[data-testid="awesometable-table-static-ips"] tbody tr').each(($row) => {
+//         // Click the delete button in each row to delete it
+//         // cy.wrap($row)
+//         //   .find('button[data-testid="table-btn-delete-row"]')
+//         //   .click();
+//         cy.wrap($row)
+//         .find('button[data-testid="table-btn-delete-row"]')
+//         .click();
+      
+//       // Wait for the element to disappear (you can adjust the timeout as needed)
+//         // cy.get($row).should('not.exist', { timeout: 10000 });
+    
+//         // You can perform additional actions if needed, such as confirming the delete action.
+//       });
+//     cy.get(LOCATORS.roleTable).should('contain.text', "No data")
+// }
+
+function deleteRows(rows) {
+    if (rows.length === 0) {
+      // All rows are deleted, exit the recursion
+      return;
+    }
+  
+    const currentRow = rows[0];
+  
+    // Click the delete button in the current row
+    cy.wrap(currentRow)
+      .find('button[data-testid="table-btn-delete-row"]')
+      .click()
+      .then(() => {
+        // Use should('not.exist') to check if the current row is removed
+        // cy.wrap(currentRow).should('not.exist', { timeout: 10000 });
+  
+        // Recursively call deleteRows with the remaining rows
+        deleteRows(rows.slice(1));
+      });
+  }
+  
+
+
 export function deleteTable() {
-    // Select the three-dot option in the specified row and click it
-    cy.get(LOCATORS.tableTr) 
+
+      cy.get(LOCATORS.tableTr) 
       .eq(1) // Select the specific row by index
       .find(LOCATORS.deleteUserButton)
       .click();

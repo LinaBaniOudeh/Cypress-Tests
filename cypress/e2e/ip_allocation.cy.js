@@ -27,65 +27,74 @@ describe("Ip Allocation Page", () => {
   it("check validation on adding a static ip without adding a user rule", () => {
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.staticIpInputField,"10.41.0.0/16")
     ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,true)
-    ipAllocationHelper.assertSave('Static IP enabled but no rules were defined')
+    ipAllocationHelper.assertSave()
+    ipAllocationHelper.assertPopUpMessage('Static IP enabled but no rules were defined')
    });
 
-   it("check validation on adding a user static ip that not in the  range ", () => {
+   it("check validation on adding a user static ip that not in the range ", () => {
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.staticIpInputField,"10.41.0.0/16")
     ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,true)
     ipAllocationHelper.chooseFromDropDown(ipAllocationHelper.LOCATORS.sdpUserInput,"Leena BaniOdeh",ipAllocationHelper.LOCATORS.listBox)
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.sdpIPInput,"10.44.0.0")
     ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.addButton)
-    ipAllocationHelper.assertSave('10.44.0.0 is not in the static IP range 10.41.0.0/16')
+    ipAllocationHelper.assertSave()
+    ipAllocationHelper.assertPopUpMessage('10.44.0.0 is not in the static IP range 10.41.0.0/16')
    });
 
-   it("check validation on adding a user static ip that not in the  range ", () => {
+   it("check validation on adding a duplicate sdp user with exsisted static ip", () => {
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.staticIpInputField,"10.41.0.0/16")
     ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,true)
     ipAllocationHelper.chooseFromDropDown(ipAllocationHelper.LOCATORS.sdpUserInput,"Leena4 BaniOdeh",ipAllocationHelper.LOCATORS.listBox)
-    // ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.dropdownListButton)
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.sdpIPInput,"10.41.0.1")
     ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.addButton)
+    ipAllocationHelper.chooseFromDropDown(ipAllocationHelper.LOCATORS.sdpUserInput,"Leena34 BaniOdeh",ipAllocationHelper.LOCATORS.listBox)
+    ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.sdpIPInput,"10.41.0.1")
+    ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.addButton)
+    ipAllocationHelper.assertPopUpMessage('10.41.0.1 is already allocated to an SDP user')
     
-    ipAllocationHelper.chooseFromDropDown(ipAllocationHelper.LOCATORS.sdpUserInput,"Leena BaniOdeh",ipAllocationHelper.LOCATORS.listBox)
-    // ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.dropdownListButton)
-    ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.sdpIPInput,"10.41.0.1")
-    ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.addButton)
-    ipAllocationHelper.assertSave('10.41.0.1 is already allocated to an SDP user')
+    //teardown 
+    ipAllocationHelper.deleteTable()
+    ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,false)
+    ipAllocationHelper.clearInputField(ipAllocationHelper.LOCATORS.staticIpInputField)
+    ipAllocationHelper.assertSave()
+    ipAllocationHelper.assertPopUpMessage('Saved successfully')
+
    });
 
    it("check validation on adding a user static ip in the range ", () => {
     ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,true)
-
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.staticIpInputField,"10.41.0.0/16")
     ipAllocationHelper.chooseFromDropDown(ipAllocationHelper.LOCATORS.sdpUserInput,"Leena BaniOdeh",ipAllocationHelper.LOCATORS.listBox)
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.sdpIPInput,"10.41.0.1")
     ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.addButton)
-    ipAllocationHelper.assertSave('Saved successfully')
-    //teardown
+    ipAllocationHelper.assertSave()
+    ipAllocationHelper.assertPopUpMessage('Saved successfully')
+
+    // teardown
+    ipAllocationHelper.deleteTable()
     ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,false)
     ipAllocationHelper.clearInputField(ipAllocationHelper.LOCATORS.staticIpInputField)
-    ipAllocationHelper.deleteTable()
-    ipAllocationHelper.assertSave('Saved successfully')
-    // cy.get('[data-testid="catodialog-actions"] > .MuiButton-contained > .MuiButton-label').click()
+    ipAllocationHelper.assertSave()
+    ipAllocationHelper.assertPopUpMessage('Saved successfully')
+
    });
 
    it.only("Test overlaps ip in dynamic and static ip range", () => {
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.dynamicIpInputField,"10.41.0.0/24")
-
     ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,true)
-
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.staticIpInputField,"10.41.0.0/16")
     ipAllocationHelper.chooseFromDropDown(ipAllocationHelper.LOCATORS.sdpUserInput,"Leena BaniOdeh",ipAllocationHelper.LOCATORS.listBox)
     ipAllocationHelper.typeValidInput(ipAllocationHelper.LOCATORS.sdpIPInput,"10.41.0.1")
     ipAllocationHelper.clickButton(ipAllocationHelper.LOCATORS.addButton)
-    ipAllocationHelper.assertSave('Dynamic IP range overlaps Static IP range')
+    ipAllocationHelper.assertSave()
+    ipAllocationHelper.assertPopUpMessage('Dynamic IP range overlaps Static IP range')
+    
     //teardown
-    // ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,false)
-    // ipAllocationHelper.clearInputField(ipAllocationHelper.LOCATORS.staticIpInputField)
-    // ipAllocationHelper.deleteTable()
-    // ipAllocationHelper.assertSave('Saved successfully')
-    // cy.get('[data-testid="catodialog-actions"] > .MuiButton-contained > .MuiButton-label').click()
+    ipAllocationHelper.deleteTable()
+    ipAllocationHelper.setRadioButtonState(ipAllocationHelper.LOCATORS.staticIpsToggleButton,false)
+    ipAllocationHelper.clearInputField(ipAllocationHelper.LOCATORS.staticIpInputField)
+    ipAllocationHelper.assertSave()
+    // ipAllocationHelper.assertPopUpMessage('Saved successfully')
    });
 
 });

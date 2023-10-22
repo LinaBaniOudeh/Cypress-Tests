@@ -23,3 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('waitUntilElementNotExists', { prevSubject: true }, (subject) => {
+    cy.wrap(subject).should('not.exist', { timeout: 10000 });
+  });
+  
