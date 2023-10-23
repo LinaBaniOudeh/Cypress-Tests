@@ -11,11 +11,11 @@ dynamicIpText1:'[data-testid="section"]:nth-child(1) h6',
 dynamicIpRange:'[data-testid="fieldlabel-root"]:nth-child(1) p',
 staticIp:'[data-testid="section"]:nth-child(2) h4',
 staticIpText1:'[data-testid="section"]:nth-child(2) h6',
-enableStaticIps:'.cQVevh',
+enableStaticIps:"#MarginFixContainer-1-1-2:nth(0)",
 staticIpsToggleButton:'input[name="accessSettings.staticIpAllocationEnabled"]',
-warningText:'.yVPiD > .sc-gXLHMB > .sc-cUoWTh',
-staticIpRange:'.seedV5-jssV529 > .cSQsIm',
-allocateIpPerSDPUser:'.sc-jhbjDc > .sc-cUoWTh',
+warningText:'.MuiV5-Grid2-root > .MuiV5-Box-root> .MuiV5-Typography-root',
+staticIpRange:".MuiV5-Box-root > #MarginFixContainer-1-1-2:nth(1)" ,
+allocateIpPerSDPUser:'.MuiV5-Grid2-root > .MuiV5-Typography-root',
 sdpUser:'[data-testid="catotextinput-label"]',
 roleTable:'[data-testid="awesometable-table-static-ips"]',
 noItems:'[data-testid="table-no-items"]',
@@ -32,8 +32,52 @@ dropdownListButton:'[data-testid="ArrowDropDownIcon"]',
 deleteUserButton:'button[data-testid="table-btn-delete-row"]',
 tableTr:'table tr',
 overrideButton:'[data-testid="catodialog-actions"] > .MuiButton-contained > .MuiButton-label',
+helperText:"#vpnRange-helper-text",
+ariaDescribedBy:'aria-describedby',
+ariaInvalid:'aria-invalid',
 //[placeholder="Search or select SDP User"]
 }
+
+export const INVALID_IPS=["20.41.0.","10.44.0.0"]
+export const VALID_IPS_Range=["10.41.0.0/16", "10.41.0.0/24"]
+export const VALID_IPS=["10.41.0.0", "10.41.0.1"]
+export const USERS =
+[{
+    userName:"Leena BaniOdeh",
+    userIP:"10.41.0.1"
+},
+{
+    userName:"Leena34 BaniOdeh",
+    userIP:"10.41.0.1"
+}]
+
+
+export const MSG = {
+    savedSuccessfully: "Saved successfully" ,
+    noRuleAdded: "Static IP enabled but no rules were defined",
+    overlapIps:"Dynamic IP range overlaps Static IP range",
+    duplicateIps:"10.41.0.1 is already allocated to an SDP user",
+    notInRangeIp:"10.44.0.0 is not in the static IP range 10.41.0.0/16",
+    noIpIsAdded:"Please add a static IP range",
+    invalidCIDRFormat:"Invalid CIDR format",
+}
+
+export const TEXT_CONTENT= {
+    iPAllocationPolicy:"IP Allocation Policy",
+    dynamicIp:'Dynamic IP',
+    defineTheDefaultIp:'Define the default IP range for your SDP users',
+    ipRange:"IP Range",
+    staticIp:'Static IP',
+    allocateApreDefinedIp:'Allocate a pre-defined static IP address to SDP users, instead of from the dynamic IP range',
+    enableStaticIPs:"Enable Static IPs",
+    warningMessage:'When disabled, all IPs are only allocated from the Dynamic IP range',
+    allocateIpPerSDPUser:"Allocate IP per SDP User",
+    sdpUser:"SDP User",
+    noData:"No data",
+    staticIpAddress:'Static IP address'
+
+}
+
 
 export function navigateToIpAllocation(){
     cy.get(LOCATORS.ipAllocationButton).click()
@@ -41,37 +85,43 @@ export function navigateToIpAllocation(){
 }
 
 export function validatePageContent(){
-    cy.title().should("include", "IP Allocation Policy");
-    cy.get(LOCATORS.pageTitle).should('have.text',"IP Allocation Policy")
-    cy.get(LOCATORS.dynamicIp).should('contain', 'Dynamic IP');
-    cy.get(LOCATORS.dynamicIpText1).should('contain', 'Define the default IP range for your SDP users');
-    cy.get(LOCATORS.dynamicIpRange).should('have.text',"IP Range")
-    cy.get(LOCATORS.staticIp).should('contain', 'Static IP');
-    cy.get(LOCATORS.staticIpText1).should('contain', 'Allocate a pre-defined static IP address to SDP users, instead of from the dynamic IP range');
-    cy.get(LOCATORS.enableStaticIps).should('contain.text',"Enable Static IPs")
+    cy.title().should("include", TEXT_CONTENT.iPAllocationPolicy);
+    cy.get(LOCATORS.pageTitle).should('have.text',TEXT_CONTENT.iPAllocationPolicy)
+    cy.get(LOCATORS.dynamicIp).should('contain', TEXT_CONTENT.dynamicIp);
+    cy.get(LOCATORS.dynamicIpText1).should('contain', TEXT_CONTENT.defineTheDefaultIp);
+    cy.get(LOCATORS.dynamicIpRange).should('have.text',TEXT_CONTENT.ipRange)
+    cy.get(LOCATORS.staticIp).should('contain', TEXT_CONTENT.staticIp);
+    cy.get(LOCATORS.staticIpText1).should('contain', TEXT_CONTENT.allocateApreDefinedIp);
+    cy.get(LOCATORS.enableStaticIps).should('contain.text',TEXT_CONTENT.enableStaticIPs)
     // Find the toggle button
     cy.get(LOCATORS.staticIpsToggleButton).should('not.be.checked');
 
     // Find the text and assert its visibility
     cy.get(LOCATORS.warningText)
     .should('be.visible')
-    .should('have.text', 'When disabled, all IPs are only allocated from the Dynamic IP range');
-    cy.get(LOCATORS.staticIpRange).should('contain.text',"IP Range")
-    cy.get(LOCATORS.allocateIpPerSDPUser).should('contain.text',"Allocate IP per SDP User")
-    cy.get(LOCATORS.sdpUser).should('contain.text',"SDP User")
-    cy.get(LOCATORS.roleTable).should('contain.text', "No data")
+    .should('have.text', TEXT_CONTENT.warningMessage);
+    cy.get(LOCATORS.staticIpRange).should('contain.text',TEXT_CONTENT.ipRange)
+    cy.get(LOCATORS.allocateIpPerSDPUser).should('contain.text',TEXT_CONTENT.allocateIpPerSDPUser)
+    cy.get(LOCATORS.sdpUser).should('contain.text',TEXT_CONTENT.sdpUser)
+    cy.get(LOCATORS.roleTable).should('contain.text', TEXT_CONTENT.noData)
     cy.get(LOCATORS.roleTableCell)
     .eq(0) // Select the first <td>
-    .should('contain', 'SDP User');
+    .should('contain', TEXT_CONTENT.sdpUser);
 
     cy.get(LOCATORS.roleTableCell)
     .eq(1) // Select the second <td>
-    .should('contain', 'Static IP address');
+    .should('contain', TEXT_CONTENT.staticIpAddress);
 }
 
-export function typeInvalidInput(selector,value){
+export function typeInvalidInput(selector,value,helperMsg){//arg message
     cy.get(selector).clear().type(value);
-    cy.get(selector).should('have.attr', 'aria-invalid', 'true');
+    cy.get(selector).should('have.attr', LOCATORS.ariaInvalid, 'true') //locator
+    .invoke('attr', LOCATORS.ariaDescribedBy)//locator
+    .then((ariaDescribedBy) => {
+    // Verify if the text "Invalid CIDR format" is present in the associated element
+    cy.get(`[id="${ariaDescribedBy}"]`).should('contain', helperMsg);
+  });
+
 
 }
 
@@ -82,16 +132,13 @@ export function assertDisabledSaveButton(selector){
 
 export function typeValidInput(selector, value){
     cy.get(selector).clear().type(value)
-    cy.get(selector).should('have.attr', 'aria-invalid', 'false');
+    cy.get(selector).should('have.attr', LOCATORS.ariaInvalid, 'false'); //locator
 
 }
 
 export function assertSave(message) {
-    // Save and assert pop-up message
     cy.get(LOCATORS.saveButton).click();
-    // cy.get(LOCATORS.popUpMessage)
-    //   .should('be.visible')
-    //   .contains(message); //constant
+    assertPopUpMessage(message)
 }
 
 export function assertPopUpMessage(message){
@@ -114,10 +161,6 @@ export function setRadioButtonState(selector, targetValue) {
 
 export function chooseFromDropDown(dropdownSelector, optionText, searchSelector) {
     cy.get(dropdownSelector).click(); // Click to open the dropdown
-  
-    // cy.get(dropdownSelector).type(optionText ,{ delay: 500 }).should('be.visible'); // Type the text to search for the option
-  
-    // Wait for the option to become visible in the dropdown list
     cy.get(searchSelector).contains(optionText).should('be.visible').click();
   }
 
@@ -161,26 +204,26 @@ export function clickButton(selector){
 //     cy.get(LOCATORS.roleTable).should('contain.text', "No data")
 // }
 
-function deleteRows(rows) {
-    if (rows.length === 0) {
-      // All rows are deleted, exit the recursion
-      return;
-    }
+// function deleteRows(rows) {
+//     if (rows.length === 0) {
+//       // All rows are deleted, exit the recursion
+//       return;
+//     }
   
-    const currentRow = rows[0];
+//     const currentRow = rows[0];
   
-    // Click the delete button in the current row
-    cy.wrap(currentRow)
-      .find('button[data-testid="table-btn-delete-row"]')
-      .click()
-      .then(() => {
-        // Use should('not.exist') to check if the current row is removed
-        // cy.wrap(currentRow).should('not.exist', { timeout: 10000 });
+//     // Click the delete button in the current row
+//     cy.wrap(currentRow)
+//       .find('button[data-testid="table-btn-delete-row"]')
+//       .click()
+//       .then(() => {
+//         // Use should('not.exist') to check if the current row is removed
+//         // cy.wrap(currentRow).should('not.exist', { timeout: 10000 });
   
-        // Recursively call deleteRows with the remaining rows
-        deleteRows(rows.slice(1));
-      });
-  }
+//         // Recursively call deleteRows with the remaining rows
+//         deleteRows(rows.slice(1));
+//       });
+//   }
   
 
 
@@ -194,4 +237,17 @@ export function deleteTable() {
 
 export function clearInputField(selector){
     cy.get(selector).clear()
+}
+
+export function addSDPUser(user,ip){
+
+    chooseFromDropDown(LOCATORS.sdpUserInput,user,LOCATORS.listBox)
+    typeValidInput(LOCATORS.sdpIPInput,ip)
+    clickButton(LOCATORS.addButton)
+}
+
+export function addStaticIpRange(ip){
+
+    typeValidInput(LOCATORS.staticIpInputField,ip)
+    setRadioButtonState(LOCATORS.staticIpsToggleButton, true)
 }
