@@ -49,32 +49,29 @@ const TRUSTED_NETWORK_DATA = [
 describe("Trusted Network Page", () => {
   // Run this code before each test
   beforeEach(() => {
-    // Visit the Wikipedia homepage
     loginHelper.loginToCMA(loginHelper.LOGIN_CREDENTIALS);
     loginHelper.navigateToAccess();
     trustedNetworkHelper.navigateToIpAllocation();
   });
+
   it("Assert Page Content", () => {
     trustedNetworkHelper.assertPageContent();
   });
 
   it("test adding HTTP Response, DNS Resolving, Ping Response - IP and Ping Response - Hostname with valid URL", () => {
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[3]);
+    for (let i = 0; i < 4; i++) {
+      trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[i]);
+    }
     trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
-
     trustedNetworkHelper.deleteTableContent(
       trustedNetworkHelper.LOCATORS.tableSelector
     );
     trustedNetworkHelper.assertEmptyTable();
-    cy.wait(2000);
     trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
   });
 
   it("test adding HTTP Response with Invalid URL", () => {
-    trustedNetworkHelper.clickButton(trustedNetworkHelper.LOCATORS.newButton);
+    trustedNetworkHelper.clickButton(trustedNetworkHelper.LOCATORS.newButton); //function
     trustedNetworkHelper.chooseFromDropDown(
       trustedNetworkHelper.LOCATORS.networkTypeDropDown,
       TYPES[0],
@@ -93,7 +90,6 @@ describe("Trusted Network Page", () => {
       trustedNetworkHelper.LOCATORS.networkTypeDropDown,
       TYPES[1],
       trustedNetworkHelper.LOCATORS.listBox
-
     );
     trustedNetworkHelper.typeInvalidInput(
       TRUSTED_NETWORK_DATA[1].placeHolder1,
@@ -108,7 +104,6 @@ describe("Trusted Network Page", () => {
       trustedNetworkHelper.LOCATORS.networkTypeDropDown,
       TYPES[1],
       trustedNetworkHelper.LOCATORS.listBox
-
     );
     trustedNetworkHelper.typeInvalidInput(
       TRUSTED_NETWORK_DATA[1].placeHolder2,
@@ -123,7 +118,6 @@ describe("Trusted Network Page", () => {
       trustedNetworkHelper.LOCATORS.networkTypeDropDown,
       TYPES[2],
       trustedNetworkHelper.LOCATORS.listBox
-
     );
     trustedNetworkHelper.typeInvalidInput(
       TRUSTED_NETWORK_DATA[2].placeHolder,
@@ -138,7 +132,6 @@ describe("Trusted Network Page", () => {
       trustedNetworkHelper.LOCATORS.networkTypeDropDown,
       TYPES[3],
       trustedNetworkHelper.LOCATORS.listBox
-
     );
     trustedNetworkHelper.typeInvalidInput(
       TRUSTED_NETWORK_DATA[3].placeHolder,
@@ -148,79 +141,67 @@ describe("Trusted Network Page", () => {
   });
 
   it("test adding 3 Ping Response - IP Address rules (least secure) and test adding 2 Ping Response - Hostname rules", () => {
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[3]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[3]);
-    trustedNetworkHelper.deleteTableContent(
-        trustedNetworkHelper.LOCATORS.tableSelector
-      );
-      trustedNetworkHelper.assertEmptyTable();
-      cy.wait(2000);
-      trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
-
+    for (let i = 0; i < 3; i++) {
+      trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
+    }
+    for (let i = 0; i < 2; i++) {
+      trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[3]);
+    }
+    trustedNetworkHelper.assertEmptyTable();
+    cy.wait(2000);
+    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
   });
 
-  it.only("test adding 4 Ping Response - IP Address rules (least secure) and test adding 2 Ping Response - Hostname rules", () => {
+  it("test adding 4 Ping Response - IP Address rules (least secure) and test adding 2 Ping Response - Hostname rules", () => {
     trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[2]);
-
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[3]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[3]);
-    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.pingError);
-    cy.reload()
-    trustedNetworkHelper.assertEmptyTable()
+    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.pingError);    
+    trustedNetworkHelper.deleteTableContent(
+      trustedNetworkHelper.LOCATORS.tableSelector
+    );
+    trustedNetworkHelper.assertEmptyTable();
+    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
   });
 
   it("test adding 5 HTTPresponse rules", () => {
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.deleteTableContent(
-        trustedNetworkHelper.LOCATORS.tableSelector
-      );
-      trustedNetworkHelper.assertEmptyTable();
-      cy.wait(2000);
-      trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
+    for (let i = 0; i < 4; i++) {
+      trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
+    }
+    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.httpsError);
   });
 
   it("test adding 6 HTTPresponse rules", () => {
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
 
+    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
     trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.httpsError);
-    cy.reload()
-    trustedNetworkHelper.assertEmptyTable()
+    cy.reload();
+    trustedNetworkHelper.deleteTableContent(
+      trustedNetworkHelper.LOCATORS.tableSelector
+    );
+    trustedNetworkHelper.assertEmptyTable();
+    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
   });
 
-  it("test adding 5 HTTPresponse rules and 5 DNS Resolving rules", () => {
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
-    trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
+  it("test adding 6 DNS Resolving rules", () => {
+    for (let i = 0; i < 5; i++) {
+      trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
+    }
 
+    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.dnsError);
+    cy.reload();
+    trustedNetworkHelper.assertEmptyTable();
+  });
+  
+  it("test adding 5 HTTPresponse rules and 5 DNS Resolving rules", () => {
+    for (let i = 0; i < 4; i++) {
+      trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[0]);
+    }
+    for (let i = 0; i < 4; i++) {
+      trustedNetworkHelper.addNewTrustedNetwork(TRUSTED_NETWORK_DATA[1]);
+    }
     trustedNetworkHelper.deleteTableContent(
-        trustedNetworkHelper.LOCATORS.tableSelector
-      );
-      trustedNetworkHelper.assertEmptyTable();
-      cy.wait(2000);
-      trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
+      trustedNetworkHelper.LOCATORS.tableSelector
+    );
+    trustedNetworkHelper.assertEmptyTable();
+    trustedNetworkHelper.assertSave(trustedNetworkHelper.MSG.savedSuccessfully);
   });
 });

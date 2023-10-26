@@ -1,5 +1,3 @@
-import { INVALID_IPS } from "./ip_allocation_helper";
-
 export const LOCATORS = {
   trustedNetworkButton: '[data-testvalue="Trusted Networks"]',
   trustedNetwork: "#page-title",
@@ -30,9 +28,9 @@ export const LOCATORS = {
   ariaDescribedBy: "aria-describedby",
   ariaInvalid: "aria-invalid",
   popUpMessage: "#notistack-snackbar",
-  tableSelector:'[data-testid=awesometable-table-trusted-networks]',
-  body:'body'
-
+  tableSelector: "[data-testid=awesometable-table-trusted-networks]",
+  body: "body",
+  searchField: '[data-testid="SearchInput"]',
 };
 
 const PAGE_CONTENT_TEXT = {
@@ -48,17 +46,17 @@ const PAGE_CONTENT_TEXT = {
 };
 
 export const MSG = {
-    savedSuccessfully: "Saved successfully",
-    invalidHttp:"Invalid HTTPS Url",
-    invalidIP:"Invalid IP address",
-    invalidHostname:"Invalid URL",
-    httpsError:"You cannot define more than 5 Trusted Networks based on a HTTPS Response",
-    dnsError:"You cannot define more than 5 Trusted Networks based on a DNS query",
-    pingError:"You cannot define more than 5 Trusted Networks based on a Ping Response"
+  savedSuccessfully: "Saved successfully",
+  invalidHttp: "Invalid HTTPS Url",
+  invalidIP: "Invalid IP address",
+  invalidHostname: "Invalid URL",
+  httpsError:
+    "You cannot define more than 5 Trusted Networks based on a HTTPS Response",
+  dnsError:
+    "You cannot define more than 5 Trusted Networks based on a DNS query",
+  pingError:
+    "You cannot define more than 5 Trusted Networks based on a Ping Response",
 };
-
-
-
 
 const TRUSTED_NETWORK_DATA = [
   {
@@ -66,7 +64,7 @@ const TRUSTED_NETWORK_DATA = [
     description: "",
     type: "HTTPS Response (most secure)",
     httpsAddress: "https://www.example.com",
-    placeHolder:'[placeholder="https://www.example.com"]'
+    placeHolder: '[placeholder="https://www.example.com"]',
   },
   {
     name: "rule2",
@@ -74,76 +72,68 @@ const TRUSTED_NETWORK_DATA = [
     type: "DNS Resolving",
     hostname: "example.com",
     ipAddress: "10.41.0.0",
-    placeHolder1:'[placeholder="e.g. example.com"]',
-    placeHolder2:'[placeholder="e.g. 192.0.2.1"]'
+    placeHolder1: '[placeholder="e.g. example.com"]',
+    placeHolder2: '[placeholder="e.g. 192.0.2.1"]',
   },
   {
     name: "rule3",
     description: "",
     type: "Ping Response - Hostname (least secure)",
     hostname: "example.com",
-    placeHolder:'[placeholder="e.g. example.com"]'
+    placeHolder: '[placeholder="e.g. example.com"]',
   },
   {
     name: "rule4",
     description: "",
     type: "Ping Response - IP Address (least secure)",
     ipAddress: "10.40.0.0",
-    placeHolder:'[placeholder="e.g. 192.0.2.1"]'
+    placeHolder: '[placeholder="e.g. 192.0.2.1"]',
   },
 ];
-
-// PLACE_HOLDERS = [
-
-// ]
 
 export function navigateToIpAllocation() {
   cy.get(LOCATORS.trustedNetworkButton).click();
 }
 
 export function assertPageContent() {
-  cy.get(LOCATORS.trustedNetwork).should(
-    "contain.text",
-    PAGE_CONTENT_TEXT.trustedNetwork
-  );
-
-  cy.get(LOCATORS.theClientWillIdentify).should(
-    "contain.text",
+  assertTextContent(LOCATORS.trustedNetwork, PAGE_CONTENT_TEXT.trustedNetwork);
+  assertTextContent(
+    LOCATORS.theClientWillIdentify,
     PAGE_CONTENT_TEXT.theClientWillIdentify
   );
-
   setRadioButtonState(LOCATORS.toggleButton, true);
-  cy.get(LOCATORS.trustedNetworkEnabled).should(
-    "contain.text",
+  assertTextContent(
+    LOCATORS.trustedNetworkEnabled,
     PAGE_CONTENT_TEXT.trustedNetworkEnabled
   );
-
   setRadioButtonState(LOCATORS.toggleButton, false);
-  cy.get(LOCATORS.trustedNetworkEnabled).should(
-    "contain.text",
+  assertTextContent(
+    LOCATORS.trustedNetworkEnabled,
     PAGE_CONTENT_TEXT.trustedNetworkDisabled
   );
-
-  cy.get(LOCATORS.saveButton).should("contain.text", PAGE_CONTENT_TEXT.save);
-  cy.get(LOCATORS.newButton).should("contain.text", PAGE_CONTENT_TEXT.new);
-  cy.get(LOCATORS.searchField).should("be.visible");
-  cy.get(LOCATORS.table).should("contain.text", PAGE_CONTENT_TEXT.noData);
+  assertTextContent(LOCATORS.saveButton, PAGE_CONTENT_TEXT.save);
+  assertTextContent(LOCATORS.newButton, PAGE_CONTENT_TEXT.new);
+  assertVisibility(LOCATORS.searchField);
+  assertTextContent(LOCATORS.table, PAGE_CONTENT_TEXT.noData);
   cy.get(LOCATORS.newButton).click();
-  cy.get(LOCATORS.newTrustedNetwork).should(
-    "contain.text",
+  assertTextContent(
+    LOCATORS.newTrustedNetwork,
     PAGE_CONTENT_TEXT.newTrustedNetwork
   );
-  cy.get(LOCATORS.nameField).should("be.visible");
-  cy.get(LOCATORS.descriptionField).should("be.visible");
-  cy.get(LOCATORS.networkTypeDropDown).should("be.visible");
-  cy.get(LOCATORS.httpsPlaceholder).should("be.visible");
-  cy.get(LOCATORS.applyButton).should("be.visible");
-  cy.get(LOCATORS.cancelButton).should("be.visible");
-
+  assertVisibility(LOCATORS.nameField);
+  assertVisibility(LOCATORS.descriptionField);
+  assertVisibility(LOCATORS.networkTypeDropDown);
+  assertVisibility(LOCATORS.httpsPlaceholder);
+  assertVisibility(LOCATORS.applyButton);
+  assertVisibility(LOCATORS.cancelButton);
 }
-export function assertEmptyTable(){
-  cy.get(LOCATORS.table).should("contain.text", PAGE_CONTENT_TEXT.noData);
 
+export function assertTextContent(selector, text) {
+  cy.get(selector).should("contain.text", text);
+}
+
+export function assertVisibility(selector) {
+  cy.get(selector).should("be.visible");
 }
 
 export function setRadioButtonState(selector, targetValue) {
@@ -168,7 +158,7 @@ export function chooseFromDropDown(dropdownSelector, optionText, listSelector) {
 export function addNewTrustedNetwork(trustedNetwork) {
   cy.get(LOCATORS.newButton).click();
   cy.get(LOCATORS.nameField).type(trustedNetwork.name);
-  if (trustedNetwork.description !== '') {
+  if (trustedNetwork.description !== "") {
     cy.get(LOCATORS.descriptionField).type(trustedNetwork.description);
   }
 
@@ -189,7 +179,7 @@ export function addNewTrustedNetwork(trustedNetwork) {
 
 export function typeValidInput(selector, value) {
   cy.get(selector).clear().type(value);
-  cy.get(selector).should("have.attr", LOCATORS.ariaInvalid, "false"); //locator
+  cy.get(selector).should("have.attr", LOCATORS.ariaInvalid, "false");
 }
 
 export function assertSave(message) {
@@ -209,35 +199,30 @@ export function clickButton(selector) {
 }
 
 export function typeInvalidInput(selector, value, helperMsg) {
-    //arg message
-    cy.get(selector).clear().type(value);
-    // cy.get(selector).trigger('keydown', { key: 'Tab', keyCode: 9, which: 9 })
-    cy.get(LOCATORS.body).click();
-    cy.get(selector)
-      .should("have.attr", LOCATORS.ariaInvalid, "true") //locator
-      .invoke("attr", LOCATORS.ariaDescribedBy) //locator
-      .then((ariaDescribedBy) => {
-        // Verify if the text "Invalid CIDR format" is present in the associated element
-        cy.get(`[id="${ariaDescribedBy}"]`).should("contain", helperMsg);
+  //arg message
+  cy.get(selector).clear().type(value);
+  cy.get(LOCATORS.body).click();
+  cy.get(selector)
+    .should("have.attr", LOCATORS.ariaInvalid, "true")
+    .invoke("attr", LOCATORS.ariaDescribedBy)
+    .then((ariaDescribedBy) => {
+      cy.get(`[id="${ariaDescribedBy}"]`).should("contain", helperMsg);
     });
 }
 
-export function deleteRow() {
-    cy.get(LOCATORS.tableTr)
-      .eq(1) // Select the specific row by index
-      .find(LOCATORS.deleteButton)
-      .click();
+export function deleteRow(index) {
+  cy.get(LOCATORS.tableTr).eq(index).find(LOCATORS.deleteButton).click();
 }
 
 export function getTableRowCount(tableSelector) {
-  return cy.get(LOCATORS.tableSelector).find('tbody tr').its('length');
+  return cy.get(tableSelector).find("tbody tr").its("length");
 }
 
 export function deleteTableContent(tableSelector) {
   getTableRowCount(tableSelector).then((rowCount) => {
     for (let i = 0; i < rowCount; i++) {
-      cy.wait(1500)
-      deleteRow();
+      cy.wait(1500);
+      deleteRow(1);
     }
   });
 }
