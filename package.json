@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^13.3.0"
+    "cross-env": "^7.0.3",
+    "cypress": "^13.3.0",
+    "mocha": "^10.2.0"
   }
 }
