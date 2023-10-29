@@ -8,7 +8,7 @@ describe("Trusted Network Page", () => {
   beforeEach(() => {
     loginHelper.loginToCMA(loginHelper.LOGIN_CREDENTIALS);
     loginHelper.navigateToAccess();
-    trustedNetworkHelper.navigateToIpAllocation();
+    trustedNetworkHelper.navigateToTrustedNetwork();
   });
 
   it("Assert Page Content", () => {

@@ -104,7 +104,7 @@ export const TRUSTED_NETWORK_DATA = [
   },
 ];
 
-export function navigateToIpAllocation() {
+export function navigateToTrustedNetwork() {
   cy.get(LOCATORS.trustedNetworkButton).click();
 }
 
