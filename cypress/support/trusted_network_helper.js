@@ -31,7 +31,20 @@ export const LOCATORS = {
   tableSelector: "[data-testid=awesometable-table-trusted-networks]",
   body: "body",
   searchField: '[data-testid="SearchInput"]',
+  exitButton:'.notistack-SnackbarContainer button'
 };
+
+
+export const TYPES = [
+  "HTTPS Response (most secure)",
+  "DNS Resolving",
+  "Ping Response - Hostname (least secure)",
+  "Ping Response - IP Address (least secure)",
+];
+
+export const INVALID_HTTP = "www.example.com";
+export const INVALID_IP = "10.41.0";
+export const INVALID_HOSTNAME = "https://www.example.com";
 
 const PAGE_CONTENT_TEXT = {
   trustedNetwork: "Trusted Networks",
@@ -58,7 +71,7 @@ export const MSG = {
     "You cannot define more than 5 Trusted Networks based on a Ping Response",
 };
 
-const TRUSTED_NETWORK_DATA = [
+export const TRUSTED_NETWORK_DATA = [
   {
     name: "rule1",
     description: "",
@@ -114,7 +127,7 @@ export function assertPageContent() {
   assertTextContent(LOCATORS.saveButton, PAGE_CONTENT_TEXT.save);
   assertTextContent(LOCATORS.newButton, PAGE_CONTENT_TEXT.new);
   assertVisibility(LOCATORS.searchField);
-  assertTextContent(LOCATORS.table, PAGE_CONTENT_TEXT.noData);
+  assertEmptyTable();
   cy.get(LOCATORS.newButton).click();
   assertTextContent(
     LOCATORS.newTrustedNetwork,
@@ -130,6 +143,10 @@ export function assertPageContent() {
 
 export function assertTextContent(selector, text) {
   cy.get(selector).should("contain.text", text);
+}
+export function assertEmptyTable(){
+
+  assertTextContent(LOCATORS.table, PAGE_CONTENT_TEXT.noData);
 }
 
 export function assertVisibility(selector) {
@@ -167,7 +184,7 @@ export function addNewTrustedNetwork(trustedNetwork) {
     trustedNetwork.type,
     LOCATORS.listBox
   );
-  if (trustedNetwork.type === "DNS Resolving") {
+  if (trustedNetwork.type === TYPES[1]) { //DNS Resolving
     typeValidInput(trustedNetwork.placeHolder1, trustedNetwork.hostname);
     typeValidInput(trustedNetwork.placeHolder2, trustedNetwork.ipAddress);
   } else {
