@@ -40,7 +40,7 @@ describe("Trusted Network Page", () => {
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
   });
 
-  it.only("Test adding different device checks", () => {
+  it("Test adding different device checks", () => {
     devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
     for (let i = 0; i < 5; i++) {
       devicePostureHelper.addNewDeviceCheck(
