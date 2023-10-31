@@ -33,6 +33,7 @@ export const LOCATORS = {
   versionField: '[data-testid="select-products.0.operator"]',
   versionNumberField: '[placeholder="Search or select Version"]',
   //Criteria
+  inputCheckBox: 'input[type="checkbox"]',
   realTimeCheckBox: '[data-testid="checkbox-realTimeProtection"]',
   bypassDeviceCheckBox: '[data-testid="checkbox-allowUnsupportedClients"]',
   driverField: '[data-testid="entityfield-value"] input',
@@ -62,6 +63,7 @@ export const TYPES = [
 ];
 
 export const PERIODS = ["-4", "0", "20"];
+const realTimeProtectionEnabled = "real time protection enabled";
 
 const PAGE_CONTENT_TEXT = {
   pageTitle: "Device Posture",
@@ -107,7 +109,6 @@ export const DEVICE_CHECKS_DATA = [
     version: "equals",
     versionNumber: "12.2.X",
     //Criteria
-    // realTimeProtectionEnabled:,
     bypassDeviceCheckforunsupportedSDPClients: false,
   },
   {
@@ -115,14 +116,6 @@ export const DEVICE_CHECKS_DATA = [
     deviceTestType: "Disk Encryption",
     name: "device3",
     description: "description3",
-    //Vendor
-    // os:,
-    // vendor:,
-    // product:,
-    // version:,
-    // versionNumber:,
-    //Criteria
-    // realTimeProtectionEnabled:
     driverPath: "C:\\",
     bypassDeviceCheckforunsupportedSDPClients: true,
   },
@@ -138,7 +131,6 @@ export const DEVICE_CHECKS_DATA = [
     version: "equals or higher than",
     versionNumber: "9.0.X",
     //Criteria
-    // realTimeProtectionEnabled:
     bypassDeviceCheckforunsupportedSDPClients: true,
   },
   {
@@ -146,14 +138,6 @@ export const DEVICE_CHECKS_DATA = [
     deviceTestType: "Device Certificate",
     name: "device5",
     description: "description5",
-    //Vendor
-    // os: ,
-    // vendor:,
-    // product:,
-    // version:,
-    // versionNumber:,
-    // //Criteria
-    // realTimeProtectionEnabled:
     bypassDeviceCheckforunsupportedSDPClients: true,
   },
 ];
@@ -181,7 +165,7 @@ export function assertTextContent(selector, text) {
   cy.get(selector).should("contain.text", text);
 }
 export function assertEmptyTable() {
-  assertTextContent(LOCATORS.table, PAGE_CONTENT_TEXT.noData);
+  assertTextContent(LOCATORS.deviceChecksTable1, PAGE_CONTENT_TEXT.noData);
 }
 
 export function assertVisibility(selector) {
@@ -274,9 +258,9 @@ function fillCriteriaSection(data) {
 
 export function setCheckbox(selector, value) {
   if (value) {
-    cy.get(selector).find('input[type="checkbox"]').check({ force: true });
+    cy.get(selector).find(LOCATORS.inputCheckBox).check({ force: true });
   } else {
-    cy.get(selector).find('input[type="checkbox"]').uncheck({ force: true });
+    cy.get(selector).find(LOCATORS.inputCheckBox).uncheck({ force: true });
   }
 }
 
@@ -290,7 +274,7 @@ export function expandDropdownIfNotExpanded(selector) {
 }
 export function typeValidInput(selector, input) {
   cy.get(selector).clear().type(input).should("have.value", input);
-  cy.get(selector).should("have.attr", "aria-invalid", "false");
+  cy.get(selector).should("have.attr", LOCATORS.ariaInvalid, "false");
 }
 
 export function assertSave(message) {
@@ -326,7 +310,7 @@ export function deleteRow(index) {
 }
 
 export function getTableRowCount(tableSelector) {
-  return cy.get(tableSelector).find("tbody tr").its("length");
+  return cy.get(tableSelector).find(LOCATORS.tableTr).its("length");
 }
 
 export function deleteTableContent(tableSelector) {
@@ -361,7 +345,7 @@ export function assertDeviceChecksTableContent(data) {
     if (rowData.realTimeProtectionEnabled) {
       assertTextCaseInsensitive(
         LOCATORS.criteriaCell,
-        "real time protection enabled"
+        realTimeProtectionEnabled
       );
     }
     // Check if the "Vendor" property exists in rowData
