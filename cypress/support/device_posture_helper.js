@@ -39,12 +39,18 @@ export const LOCATORS = {
   addDriverButton: ".MuiV5-InputAdornment-root button",
   driverTable: '[data-testid="awesometable-table-paths"]',
   //table
-  deviceChecksTable: '[data-testid="awesometable-table-device_tests"] tbody tr',
+  deviceChecksTable1: '[data-testid="awesometable-table-device_tests"] tbody tr',
+  deviceChecksTable2: '[data-testid="awesometable-table-device_tests"]',
+
   nameCell: '[data-testid="device_tests-row-cell-name"]',
   categoryCell: '[data-testid="device_tests-row-cell-category"]',
   criteriaCell: '[data-testid="device_tests-row-cell-criteria"]',
   vendorCell: '[data-testid="device_tests-row-cell-vendor"]',
   descriptionCell: '[data-testid="device_tests-row-cell-description"]',
+  saveButton: '[data-testid="editor-submit-btn"]',
+  deleteButton: 'button[data-testid="table-btn-delete-row"]',
+  tableTr: "table tr",
+
 };
 
 export const TYPES = [
@@ -338,7 +344,7 @@ export function deleteTableContent(tableSelector) {
 }
 
 export function assertDeviceChecksTableContent(data) {
-  cy.get(LOCATORS.deviceChecksTable).each((row, index) => {
+  cy.get(LOCATORS.deviceChecksTable1).each((row, index) => {
     const rowData = data[index];
     if (!rowData) return; // Skip if rowData is undefined
 

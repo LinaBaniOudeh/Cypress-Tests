@@ -35,15 +35,17 @@ describe("Trusted Network Page", () => {
 
   it.only('Test adding different device checks', () => {
     devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks)
-    devicePostureHelper.addNewDeviceCheck(devicePostureHelper.DEVICE_CHECKS_DATA[0])
-    devicePostureHelper.addNewDeviceCheck(devicePostureHelper.DEVICE_CHECKS_DATA[1])
-    devicePostureHelper.addNewDeviceCheck(devicePostureHelper.DEVICE_CHECKS_DATA[2])
-    devicePostureHelper.addNewDeviceCheck(devicePostureHelper.DEVICE_CHECKS_DATA[3])
+    for (let i = 0; i < 5; i++) {
+        devicePostureHelper.addNewDeviceCheck(devicePostureHelper.DEVICE_CHECKS_DATA[i])
 
-    devicePostureHelper.addNewDeviceCheck(devicePostureHelper.DEVICE_CHECKS_DATA[4])
+    }
     devicePostureHelper.assertDeviceChecksTableContent(devicePostureHelper.DEVICE_CHECKS_DATA)
+    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully)
 
-    
+    //teardown
+    devicePostureHelper.deleteTableContent(devicePostureHelper.LOCATORS.deviceChecksTable2)
+    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully)
+
   });
 
 });
