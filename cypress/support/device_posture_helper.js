@@ -351,7 +351,6 @@ export function assertDeviceChecksTableContent(data) {
           expect(text.toLowerCase()).to.equal(expectedText.toLowerCase());
         });
     };
-
     // Assert the "Name" column
     assertTextCaseInsensitive(LOCATORS.nameCell, rowData.name);
 
@@ -365,13 +364,11 @@ export function assertDeviceChecksTableContent(data) {
         "real time protection enabled"
       );
     }
-
     // Check if the "Vendor" property exists in rowData
     if (rowData.vendor) {
       cy.wrap(row).find(LOCATORS.vendorCell).should("exist");
       assertTextCaseInsensitive(LOCATORS.vendorCell, rowData.vendor);
     }
-
     // Assert the "Description" column
     assertTextCaseInsensitive(LOCATORS.descriptionCell, rowData.description);
   });
