@@ -39,7 +39,8 @@ export const LOCATORS = {
   addDriverButton: ".MuiV5-InputAdornment-root button",
   driverTable: '[data-testid="awesometable-table-paths"]',
   //table
-  deviceChecksTable1: '[data-testid="awesometable-table-device_tests"] tbody tr',
+  deviceChecksTable1:
+    '[data-testid="awesometable-table-device_tests"] tbody tr',
   deviceChecksTable2: '[data-testid="awesometable-table-device_tests"]',
 
   nameCell: '[data-testid="device_tests-row-cell-name"]',
@@ -50,7 +51,6 @@ export const LOCATORS = {
   saveButton: '[data-testid="editor-submit-btn"]',
   deleteButton: 'button[data-testid="table-btn-delete-row"]',
   tableTr: "table tr",
-
 };
 
 export const TYPES = [
@@ -193,18 +193,16 @@ export function setRadioButtonState(selector, targetValue) {
     .should("have.attr", "value")
     .then((currentValue) => {
       console.log(currentValue);
-      // Parse the `currentValue` as a boolean
       const isCurrentChecked = currentValue === "true";
 
       if (isCurrentChecked !== targetValue) {
-        cy.get(selector).click(); // Click the switch to toggle it
+        cy.get(selector).click();
       }
     });
 }
 
 export function chooseFromDropDown(dropdownSelector, optionText, listSelector) {
   cy.get(dropdownSelector).click(); // Click to open the dropdown
-  //   cy.get(listSelector).contains(optionText).should("be.visible").click();
   cy.get(listSelector)
     .contains(optionText)
     .scrollIntoView()
@@ -275,12 +273,9 @@ function fillCriteriaSection(data) {
 }
 
 export function setCheckbox(selector, value) {
-  // Check the checkbox if value is true
   if (value) {
     cy.get(selector).find('input[type="checkbox"]').check({ force: true });
-  }
-  // Uncheck the checkbox if value is false
-  else {
+  } else {
     cy.get(selector).find('input[type="checkbox"]').uncheck({ force: true });
   }
 }
@@ -381,107 +376,3 @@ export function assertDeviceChecksTableContent(data) {
     assertTextCaseInsensitive(LOCATORS.descriptionCell, rowData.description);
   });
 }
-
-// export function assertDeviceChecksTableContent(data) {
-//     // Find all rows in the table body
-//     cy.get('[data-testid="awesometable-table-device_tests"] tbody tr').each((row, index) => {
-//       const rowData = data[index];
-//       if (rowData) {
-//         // Assert the "Name" column (case-insensitive)
-//         cy.wrap(row)
-//           .find('[data-testid="device_tests-row-cell-name"]')
-//           .invoke('text')
-//           .then((text) => {
-//             expect(text.toLowerCase()).to.equal(rowData.name.toLowerCase());
-//           });
-
-//         // Assert the "Category" column (case-insensitive)
-//         cy.wrap(row)
-//           .find('[data-testid="device_tests-row-cell-category"]')
-//           .invoke('text')
-//           .then((text) => {
-//             expect(text.toLowerCase()).to.equal(rowData.deviceTestType.toLowerCase());
-//           });
-
-//         // Assert the "Criteria" column (case-insensitive)
-//         if (rowData.realTimeProtectionEnabled) {
-//           cy.wrap(row)
-//             .find('[data-testid="device_tests-row-cell-criteria"]')
-//             .invoke('text')
-//             .then((text) => {
-//               expect(text.toLowerCase()).to.contain('real time protection enabled');
-//             });
-//         }
-
-//         // Check if the "Vendor" property exists in the rowData
-//         if (rowData.vendor) {
-//           // Assert the "Vendor" column (case-insensitive)
-//           cy.wrap(row)
-//             .find('[data-testid="device_tests-row-cell-vendor"]')
-//             .should('exist') // Ensure the element exists
-//             .invoke('text')
-//             .then((text) => {
-//               expect(text.toLowerCase()).to.equal(rowData.vendor.toLowerCase());
-//             });
-//         }
-
-//         // Assert the "Description" column (case-insensitive)
-//         cy.wrap(row)
-//           .find('[data-testid="device_tests-row-cell-description"]')
-//           .invoke('text')
-//           .then((text) => {
-//             expect(text.toLowerCase()).to.equal(rowData.description.toLowerCase());
-//           });
-//       }
-//     });
-//   }
-
-// export function assertDeviceChecksTableContent(data) {
-//     // Find all rows in the table body
-//     cy.get('[data-testid="awesometable-table-device_tests"] tbody tr').each((row, index) => {
-//       const rowData = data[index];
-//       if (rowData) {
-//         // Assert the "Name" column (case-insensitive)
-//         cy.wrap(row)
-//           .find('[data-testid="device_tests-row-cell-name"]')
-//           .invoke('text')
-//           .then((text) => {
-//             expect(text.toLowerCase()).to.equal(rowData.name.toLowerCase());
-//           });
-
-//         // Assert the "Category" column (case-insensitive)
-//         cy.wrap(row)
-//           .find('[data-testid="device_tests-row-cell-category"]')
-//           .invoke('text')
-//           .then((text) => {
-//             expect(text.toLowerCase()).to.equal(rowData.deviceTestType.toLowerCase());
-//           });
-
-//         // Assert the "Criteria" column (case-insensitive)
-//         if (rowData.realTimeProtectionEnabled) {
-//           cy.wrap(row)
-//             .find('[data-testid="device_tests-row-cell-criteria"]')
-//             .invoke('text')
-//             .then((text) => {
-//               expect(text.toLowerCase()).to.contain('real time protection enabled');
-//             });
-//         }
-
-//         // Assert the "Vendor" column (case-insensitive)
-//         cy.wrap(row)
-//           .find('[data-testid="device_tests-row-cell-vendor"]')
-//           .invoke('text')
-//           .then((text) => {
-//             expect(text.toLowerCase()).to.equal(rowData.vendor.toLowerCase());
-//           });
-
-//         // Assert the "Description" column (case-insensitive)
-//         cy.wrap(row)
-//           .find('[data-testid="device_tests-row-cell-description"]')
-//           .invoke('text')
-//           .then((text) => {
-//             expect(text.toLowerCase()).to.equal(rowData.description.toLowerCase());
-//           });
-//       }
-//     });
-//   }
