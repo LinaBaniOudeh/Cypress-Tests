@@ -53,9 +53,36 @@ describe("Trusted Network Page", () => {
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
 
     //teardown
-    devicePostureHelper.deleteTableContent(
-      devicePostureHelper.LOCATORS.deviceChecksTable2
-    );
+    // devicePostureHelper.deleteTableContent(
+    //   devicePostureHelper.LOCATORS.deviceChecksTable2
+    // );
+    // devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
+  });
+
+  it('Test add 5 Device Profiles', () => {
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceProfiles);
+    for (let i = 0; i < 5; i++) {
+    devicePostureHelper.addNewDeviceProfil(devicePostureHelper.DEVICE_PROFILE_DATA[i])
+    }
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
   });
+
+
+  it('Test Enable "device3"', () => {
+    devicePostureHelper.enableByIndex(3)
+    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
+  });
+
+  it('Test Disable "device2"', () => {
+    devicePostureHelper.disableByIndex(2)
+    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully); 
+  });
+
+  
+  it('Test Delete "device1"', () => {
+    devicePostureHelper.DeleteByIndex(1)
+    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
+
+  });
+
 });

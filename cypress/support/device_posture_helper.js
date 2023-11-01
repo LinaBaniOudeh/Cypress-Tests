@@ -52,6 +52,19 @@ export const LOCATORS = {
   saveButton: '[data-testid="editor-submit-btn"]',
   deleteButton: 'button[data-testid="table-btn-delete-row"]',
   tableTr: "table tr",
+
+  //Device Profile Page
+  //general
+  generalSection: '[data-testid="device-profile-sections-message"]',
+  toggleButton: ".MuiV5-Switch-input",
+  //device checks
+  deviceChecksField: '[placeholder="Search or select "]',
+  deviceChecksProfile: '[data-testid="device-profile-sections-tests"]',
+  devicesField: '[data-testid="entityfield-value"]',
+  //options
+  optionsButton: "div.MuiV5-Box-root button.MuiV5-IconButton-sizeSmall",
+  optionsBox: ".MuiV5-Popper-root",
+  confirmDeleteButton: "button.MuiButton-contained",
 };
 
 export const TYPES = [
@@ -80,6 +93,60 @@ export const MSG = {
   periodError: "Device posture check interval must be a positive number",
   savedSuccessfully: "Saved successfully",
 };
+
+export const OPTIONS = {
+  delete: "Delete",
+  enable: "Enable",
+  disable: "Disable",
+};
+
+export const DEVICE_PROFILE_DATA = [
+  {
+    //General
+    name: "device profile1",
+    description: "description1",
+    enabled: false,
+    //Device Checks
+    deviceChecksType: "Anti-Malware",
+    devices: ["device1", "device6"],
+  },
+  {
+    //General
+    name: "device profile2",
+    description: "description2",
+    enabled: true,
+    //Device Checks
+    deviceChecksType: "Firewall",
+    devices: ["device2"],
+  },
+  {
+    //General
+    name: "device profile3",
+    description: "description3",
+    enabled: true,
+    //Device Checks
+    deviceChecksType: "Disk Encryption",
+    devices: ["device3"],
+  },
+  {
+    //General
+    name: "device profile4",
+    description: "description4",
+    enabled: true,
+    //Device Checks
+    deviceChecksType: "Patch Management",
+    devices: ["device4"],
+  },
+  {
+    //General
+    name: "device profile5",
+    description: "description5",
+    enabled: true,
+    //Device Checks
+    deviceChecksType: "Device Certificate",
+    devices: ["device5"],
+  },
+];
 
 export const DEVICE_CHECKS_DATA = [
   {
@@ -356,4 +423,49 @@ export function assertDeviceChecksTableContent(data) {
     // Assert the "Description" column
     assertTextCaseInsensitive(LOCATORS.descriptionCell, rowData.description);
   });
+}
+
+export function addNewDeviceProfil(data) {
+  cy.get(LOCATORS.newButton).click();
+  //General
+  expandDropdownIfNotExpanded(LOCATORS.generalSection);
+  typeValidInput(LOCATORS.nameField, data.name);
+  if (data.description !== "") {
+    typeValidInput(LOCATORS.descriptionField, data.description);
+  }
+  setRadioButtonState(LOCATORS.toggleButton, data.enabled);
+
+  //Device checks
+  expandDropdownIfNotExpanded(LOCATORS.deviceChecksProfile);
+  chooseFromDropDown(
+    LOCATORS.deviceChecksField,
+    data.deviceChecksType,
+    LOCATORS.listBox
+  );
+  cy.wrap(data.devices).each((device) => {
+    chooseFromDropDown(LOCATORS.devicesField, device, LOCATORS.listBox);
+  });
+  clickButton(LOCATORS.applyButton);
+}
+
+export function chooseOption(rowIndex, option) {
+  // Select the three-dot option in the specified row and click it
+  cy.get(LOCATORS.tableTr)
+    .eq(rowIndex) // Select the specific row by index
+    .find(LOCATORS.optionsButton)
+    .click();
+  cy.get(LOCATORS.optionsBox).contains(option).click();
+}
+
+export function DeleteByIndex(rowIndex) {
+  chooseOption(rowIndex, OPTIONS.delete);
+  clickButton(LOCATORS.confirmDeleteButton);
+}
+
+export function enableByIndex(rowIndex) {
+  chooseOption(rowIndex, OPTIONS.enable);
+}
+
+export function disableByIndex(rowIndex) {
+  chooseOption(rowIndex, OPTIONS.disable);
 }
