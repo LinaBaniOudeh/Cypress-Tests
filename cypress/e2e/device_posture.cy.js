@@ -83,6 +83,10 @@ describe("Trusted Network Page", () => {
     devicePostureHelper.DeleteByIndex(1)
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
 
+    //teardown
+    for (let i = 0; i < 4; i++) {
+        devicePostureHelper.DeleteByIndex(1)
+    }
   });
 
 });
