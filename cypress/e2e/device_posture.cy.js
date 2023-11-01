@@ -42,7 +42,7 @@ describe("Trusted Network Page", () => {
 
   it("Test adding different device checks", () => {
     devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       devicePostureHelper.addNewDeviceCheck(
         devicePostureHelper.DEVICE_CHECKS_DATA[i]
       );
@@ -52,41 +52,54 @@ describe("Trusted Network Page", () => {
     );
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
 
-    //teardown
+    // teardown
     // devicePostureHelper.deleteTableContent(
     //   devicePostureHelper.LOCATORS.deviceChecksTable2
     // );
     // devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
   });
 
-  it('Test add 5 Device Profiles', () => {
-    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceProfiles);
+  it("Test add 5 Device Profiles", () => {
+    devicePostureHelper.clickButton(
+      devicePostureHelper.LOCATORS.deviceProfiles
+    );
     for (let i = 0; i < 5; i++) {
-    devicePostureHelper.addNewDeviceProfil(devicePostureHelper.DEVICE_PROFILE_DATA[i])
+      devicePostureHelper.addNewDeviceProfil(
+        devicePostureHelper.DEVICE_PROFILE_DATA[i]
+      );
     }
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
   });
 
-
   it('Test Enable "device3"', () => {
-    devicePostureHelper.enableByIndex(3)
+    devicePostureHelper.enableByIndex(2);
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
   });
 
   it('Test Disable "device2"', () => {
-    devicePostureHelper.disableByIndex(2)
-    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully); 
-  });
-
-  
-  it('Test Delete "device1"', () => {
-    devicePostureHelper.DeleteByIndex(1)
+    devicePostureHelper.disableByIndex(1);
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
-
-    //teardown
-    for (let i = 0; i < 4; i++) {
-        devicePostureHelper.DeleteByIndex(1)
-    }
   });
 
+  it("Teardown", () => {
+    //teardown
+    devicePostureHelper.clickButton(
+      devicePostureHelper.LOCATORS.deviceProfiles
+    );
+    for (let i = 0; i < 5; i++) {
+      devicePostureHelper.DeleteByIndex(1);
+    }
+    devicePostureHelper.assertEmptyTable(devicePostureHelper.LOCATORS.deviceProfilesTable);
+    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
+
+    devicePostureHelper.deleteTableContent(
+      devicePostureHelper.LOCATORS.deviceChecksTable2
+    );
+    devicePostureHelper.assertEmptyTable(
+      devicePostureHelper.LOCATORS.deviceChecksTable1
+    );
+
+    devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
+  });
 });

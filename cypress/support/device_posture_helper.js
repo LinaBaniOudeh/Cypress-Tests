@@ -43,7 +43,7 @@ export const LOCATORS = {
   deviceChecksTable1:
     '[data-testid="awesometable-table-device_tests"] tbody tr',
   deviceChecksTable2: '[data-testid="awesometable-table-device_tests"]',
-
+  deviceProfilesTable:'[data-testid="table-no-items"]',
   nameCell: '[data-testid="device_tests-row-cell-name"]',
   categoryCell: '[data-testid="device_tests-row-cell-category"]',
   criteriaCell: '[data-testid="device_tests-row-cell-criteria"]',
@@ -52,6 +52,7 @@ export const LOCATORS = {
   saveButton: '[data-testid="editor-submit-btn"]',
   deleteButton: 'button[data-testid="table-btn-delete-row"]',
   tableTr: "table tr",
+  tbodyTr:"tbody tr",
 
   //Device Profile Page
   //general
@@ -87,6 +88,7 @@ const PAGE_CONTENT_TEXT = {
     "Client periodic checks are supported for Windows and Mac Clients v5.2 and higher",
   settingsText1: "Client periodically checks for Device Posture every",
   settingsText2: "minutes. (0 means periodic check is disabled)",
+  noData:"No data"
 };
 
 export const MSG = {
@@ -207,6 +209,21 @@ export const DEVICE_CHECKS_DATA = [
     description: "description5",
     bypassDeviceCheckforunsupportedSDPClients: true,
   },
+  {
+    //General
+    deviceTestType: "Anti-malware",
+    name: "device6",
+    description: "description6",
+    //Vendor
+    os: "Linux",
+    vendor: "Cisco Systems, Inc.",
+    product: "ClamAV",
+    version: "any version", //versionNumber will disappear
+    versionNumber: "",
+    //Criteria
+    realTimeProtectionEnabled: true,
+    bypassDeviceCheckforunsupportedSDPClients: true,
+  }
 ];
 
 export function navigateToDevicePosture() {
@@ -231,10 +248,10 @@ export function assertSettingsPageContent() {
 export function assertTextContent(selector, text) {
   cy.get(selector).should("contain.text", text);
 }
-export function assertEmptyTable() {
-  assertTextContent(LOCATORS.deviceChecksTable1, PAGE_CONTENT_TEXT.noData);
+export function assertEmptyTable(selector) {
+  assertTextContent(selector, PAGE_CONTENT_TEXT.noData);
 }
-
+LOCATORS.deviceChecksTable1
 export function assertVisibility(selector) {
   cy.get(selector).should("be.visible");
 }
@@ -377,7 +394,7 @@ export function deleteRow(index) {
 }
 
 export function getTableRowCount(tableSelector) {
-  return cy.get(tableSelector).find(LOCATORS.tableTr).its("length");
+  return cy.get(tableSelector).find(LOCATORS.tbodyTr).its("length");
 }
 
 export function deleteTableContent(tableSelector) {
