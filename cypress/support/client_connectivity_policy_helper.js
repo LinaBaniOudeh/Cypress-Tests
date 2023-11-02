@@ -55,6 +55,8 @@ export const LOCATORS = {
   confirmDeleteButton: "button.MuiButton-contained",
   enableRulesToggleButton: ".MuiV5-Switch-root > .MuiV5-Switch-switchBase input",
   confirmEnableRuleButton: '[data-testid="catodialog-actions"] button.MuiV5-Button-contained',
+  ruleTable1:
+  '[data-testid="awesometable-table-device_rules"] tbody tr',
 };
 
 export const PAGE_CONTENT_TEXT = {

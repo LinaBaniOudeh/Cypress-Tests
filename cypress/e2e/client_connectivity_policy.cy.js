@@ -42,11 +42,33 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it.only("Assert Enable Rules ", () => {
+  it("Assert Enable Rules ", () => {
     clientConnectivityPolicyHelper.setRadioButtonState(
       clientConnectivityPolicyHelper.LOCATORS.enableRulesToggleButton,
       true
     );
-    clickButton(clientConnectivityPolicyHelper.LOCATORS.confirmEnableRuleButton)
+    clickButton(
+      clientConnectivityPolicyHelper.LOCATORS.confirmEnableRuleButton
+    );
+    clientConnectivityPolicyHelper.assertSave(
+      clientConnectivityPolicyHelper.MSG.savedSuccessfully
+    );
+  });
+
+  it.only("Teardown", () => {
+    for (let i = 0; i < 3; i++) {
+      clientConnectivityPolicyHelper.DeleteByIndex(1);
+    }
+    clientConnectivityPolicyHelper.assertEmptyTable(
+      clientConnectivityPolicyHelper.LOCATORS.ruleTable1
+    );
+    clientConnectivityPolicyHelper.setRadioButtonState(
+      clientConnectivityPolicyHelper.LOCATORS.enableRulesToggleButton,
+      false
+    );
+
+    clientConnectivityPolicyHelper.assertSave(
+      clientConnectivityPolicyHelper.MSG.savedSuccessfully
+    );
   });
 });
