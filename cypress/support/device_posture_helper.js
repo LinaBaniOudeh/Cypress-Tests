@@ -72,6 +72,8 @@ export const LOCATORS = {
   stayButton: '[data-testid="catobutton-generic"]:nth(0)',
   continueButton: '[data-testid="catobutton-generic"]:nth(1)',
   dialogTitle: '[data-testid="catodialog-title"]',
+  dialogContent: '[data-testid="catodialog-content"]',
+  dialogActionButton:'[data-testid="catodialog-actions"] button'
 };
 
 export const TYPES = [
@@ -101,6 +103,10 @@ export const PAGE_CONTENT_TEXT = {
   deviceChecksCuurentTab: "currentTab=%22tests%22",
   settingsCurrentTab: "currentTab=%22settings%22",
   continueWithoutSaving: "Continue without save?",
+  unableToDeleteDeviceCheck:
+    "Can’t delete – the Device Check is used in one or more profiles. \n Please remove it from the profiles and then delete it.",
+  unableToDeleteDeviceProfile:
+    "Can’t delete – the profile is used in one or more rules.\n Please remove this profile from the rules and then delete it",
 };
 
 export const MSG = {

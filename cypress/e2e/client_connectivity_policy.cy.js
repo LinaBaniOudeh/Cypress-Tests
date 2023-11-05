@@ -1,7 +1,8 @@
 /// <reference types="Cypress"/>
 import * as clientConnectivityPolicyHelper from "../support/client_connectivity_policy_helper";
-import { clickButton } from "../support/device_posture_helper";
 import * as loginHelper from "../support/login_to_system_helper.js";
+import * as devicePostureHelper from "../support/device_posture_helper.js";
+
 import { it } from "mocha";
 describe("Trusted Network Page", () => {
   // Run this code before each test
@@ -12,7 +13,7 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it.only("Assert number of Countries", () => {
+  it("Assert number of Countries", () => {
     clientConnectivityPolicyHelper.clickButton(
       clientConnectivityPolicyHelper.LOCATORS.newButton
     );
@@ -54,6 +55,17 @@ describe("Trusted Network Page", () => {
     clientConnectivityPolicyHelper.assertSave(
       clientConnectivityPolicyHelper.MSG.savedSuccessfully
     );
+  });
+
+  it.only("Assert unable to delete device profile rule when it being used by client_connectivity rule ", () => {
+    devicePostureHelper.navigateToDevicePosture()
+    devicePostureHelper.chooseOption(1, devicePostureHelper.OPTIONS.delete);
+
+    devicePostureHelper.assertTextContent(
+      devicePostureHelper.LOCATORS.dialog,
+      devicePostureHelper.PAGE_CONTENT_TEXT.unableToDeleteDeviceProfile
+    );
+    clientConnectivityPolicyHelper.clickButton(devicePostureHelper.LOCATORS.dialogActionButton)
   });
 
   it("Teardown", () => {

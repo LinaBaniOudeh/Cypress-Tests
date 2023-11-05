@@ -1,5 +1,4 @@
 /// <reference types="Cypress"/>
-import { clickButton } from "../support/client_connectivity_policy_helper.js";
 import * as devicePostureHelper from "../support/device_posture_helper.js";
 import * as loginHelper from "../support/login_to_system_helper.js";
 import { it } from "mocha";
@@ -55,7 +54,7 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it.only('Assert Continue dialog after adding device check without saving', () => {
+  it("Assert Continue dialog after adding device check without saving", () => {
     devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
     devicePostureHelper.addNewDeviceCheck(
       devicePostureHelper.DEVICE_CHECKS_DATA[0]
@@ -73,12 +72,9 @@ describe("Trusted Network Page", () => {
     devicePostureHelper.clickButton(
       devicePostureHelper.LOCATORS.continueButton
     );
-
     devicePostureHelper.assertPageURL(
       devicePostureHelper.PAGE_CONTENT_TEXT.settingsCurrentTab
     );
-
-    
   });
 
   it("Assert Page Content", () => {
@@ -171,7 +167,16 @@ describe("Trusted Network Page", () => {
     devicePostureHelper.assertEmptyTable(
       devicePostureHelper.LOCATORS.deviceChecksTable1
     );
-
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
+  });
+
+  it.only("Assert unable to delete device check when it being used by device profile ", () => {
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
+
+    devicePostureHelper.deleteRow(1);
+    devicePostureHelper.assertTextContent(
+      devicePostureHelper.LOCATORS.dialog,
+      devicePostureHelper.PAGE_CONTENT_TEXT.unableToDeleteDeviceCheck
+    );
   });
 });
