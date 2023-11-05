@@ -53,10 +53,11 @@ export const LOCATORS = {
   optionsButton: "div.MuiV5-Box-root button.MuiV5-IconButton-sizeSmall",
   optionsBox: ".MuiV5-Popper-root",
   confirmDeleteButton: "button.MuiButton-contained",
-  enableRulesToggleButton: ".MuiV5-Switch-root > .MuiV5-Switch-switchBase input",
-  confirmEnableRuleButton: '[data-testid="catodialog-actions"] button.MuiV5-Button-contained',
-  ruleTable1:
-  '[data-testid="awesometable-table-device_rules"] tbody tr',
+  enableRulesToggleButton:
+    ".MuiV5-Switch-root > .MuiV5-Switch-switchBase input",
+  confirmEnableRuleButton:
+    '[data-testid="catodialog-actions"] button.MuiV5-Button-contained',
+  ruleTable1: '[data-testid="awesometable-table-device_rules"] tbody tr',
 };
 
 export const PAGE_CONTENT_TEXT = {
@@ -82,11 +83,11 @@ export const CLIENT_POLICY_DATA = [
     enabled: true,
     usersAndGroups: [
       { type: "SDP User", value: "Leena34 BaniOdeh" },
-      //   { type: "User Group", value: "Group1" },
+      { type: "User Group", value: "Group1" },
     ],
     platforms: [
       { type: "Operating System", value: "Windows" },
-      //   { type: "Operating System", value: "Android" },
+      { type: "Operating System", value: "Android" },
     ],
     countries: [
       { type: "Country", value: "Oman" },
@@ -218,6 +219,7 @@ export function typeInvalidInput(selector, value, helperMsg) {
 
 export function addNewRule(ruleData) {
   clickNewButton();
+  //General
   fillGeneralSection(ruleData);
   fillSection(ruleData.usersAndGroups, {
     container: LOCATORS.userAndGroup,
@@ -225,7 +227,7 @@ export function addNewRule(ruleData) {
     dropdownMenu2: LOCATORS.userAndGroupDropdownMenu2,
     listBox: LOCATORS.listBox,
   });
-
+  //Platform
   fillSection(ruleData.platforms, {
     container: LOCATORS.platform,
     dropdownMenu1: LOCATORS.platformDropDownMenu1,

@@ -1,6 +1,10 @@
 export const CMA_URL = "https://cc.test.catonet.works/";
 export const LOGIN_URL = "https://leena-testing.auth.test.catonet.works/";
+export const DEVICE_POSTURE_URL =
+  "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;DevicePosture";
 
+export const CLIENT_CONNECTIVITY_POLICY_URL =
+  "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;AccessPolicy";
 export const LOGIN_CREDENTIALS = [
   {
     userName: "leena.baniodeh@exalt.ps",
@@ -96,6 +100,14 @@ export function loginToCMA(LOGIN_CREDENTIALS) {
   cy.get(LOCATORS.passwordField).type(LOGIN_CREDENTIALS[0].password);
   cy.get(LOCATORS.submitButton).click();
 }
+
+export function loginToCMAUsingDirectURL(LOGIN_CREDENTIALS, url) {
+  cy.visit(url);
+  cy.get(LOCATORS.userNameField).type(LOGIN_CREDENTIALS[0].userName);
+  cy.get(LOCATORS.passwordField).type(LOGIN_CREDENTIALS[0].password);
+  cy.get(LOCATORS.submitButton).click();
+}
+
 export function navigateToAccess() {
   cy.get(LOCATORS.accessButton).click();
 }

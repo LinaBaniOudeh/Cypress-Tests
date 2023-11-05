@@ -6,12 +6,13 @@ import { it } from "mocha";
 describe("Trusted Network Page", () => {
   // Run this code before each test
   beforeEach(() => {
-    loginHelper.loginToCMA(loginHelper.LOGIN_CREDENTIALS);
-    loginHelper.navigateToAccess();
-    clientConnectivityPolicyHelper.navigateToclientConnectivityPolicy();
+    loginHelper.loginToCMAUsingDirectURL(
+      loginHelper.LOGIN_CREDENTIALS,
+      loginHelper.CLIENT_CONNECTIVITY_POLICY_URL
+    );
   });
 
-  it("Assert number of Countries", () => {
+  it.only("Assert number of Countries", () => {
     clientConnectivityPolicyHelper.clickButton(
       clientConnectivityPolicyHelper.LOCATORS.newButton
     );
@@ -55,7 +56,7 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it.only("Teardown", () => {
+  it("Teardown", () => {
     for (let i = 0; i < 3; i++) {
       clientConnectivityPolicyHelper.DeleteByIndex(1);
     }

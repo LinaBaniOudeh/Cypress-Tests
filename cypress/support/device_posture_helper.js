@@ -43,7 +43,7 @@ export const LOCATORS = {
   deviceChecksTable1:
     '[data-testid="awesometable-table-device_tests"] tbody tr',
   deviceChecksTable2: '[data-testid="awesometable-table-device_tests"]',
-  deviceProfilesTable:'[data-testid="table-no-items"]',
+  deviceProfilesTable: '[data-testid="table-no-items"]',
   nameCell: '[data-testid="device_tests-row-cell-name"]',
   categoryCell: '[data-testid="device_tests-row-cell-category"]',
   criteriaCell: '[data-testid="device_tests-row-cell-criteria"]',
@@ -52,7 +52,7 @@ export const LOCATORS = {
   saveButton: '[data-testid="editor-submit-btn"]',
   deleteButton: 'button[data-testid="table-btn-delete-row"]',
   tableTr: "table tr",
-  tbodyTr:"tbody tr",
+  tbodyTr: "tbody tr",
 
   //Device Profile Page
   //general
@@ -66,6 +66,12 @@ export const LOCATORS = {
   optionsButton: "div.MuiV5-Box-root button.MuiV5-IconButton-sizeSmall",
   optionsBox: ".MuiV5-Popper-root",
   confirmDeleteButton: "button.MuiButton-contained",
+  createDeviceChecksButton: '[data-testid="tabs-content-profiles"] button',
+  noDeviceChecksConfigText1: '[data-testid="tabs-content-profiles"] h4',
+  noDeviceChecksConfigText2: '[data-testid="tabs-content-profiles"] p',
+  stayButton: '[data-testid="catobutton-generic"]:nth(0)',
+  continueButton: '[data-testid="catobutton-generic"]:nth(1)',
+  dialogTitle: '[data-testid="catodialog-title"]',
 };
 
 export const TYPES = [
@@ -79,7 +85,7 @@ export const TYPES = [
 export const PERIODS = ["-4", "0", "20"];
 const realTimeProtectionEnabled = "real time protection enabled";
 
-const PAGE_CONTENT_TEXT = {
+export const PAGE_CONTENT_TEXT = {
   pageTitle: "Device Posture",
   deviceChecks: "Device Checks",
   devicePostureProfiles: "Device Posture Profiles",
@@ -88,7 +94,13 @@ const PAGE_CONTENT_TEXT = {
     "Client periodic checks are supported for Windows and Mac Clients v5.2 and higher",
   settingsText1: "Client periodically checks for Device Posture every",
   settingsText2: "minutes. (0 means periodic check is disabled)",
-  noData:"No data"
+  noData: "No data",
+  noDeviceChecksConfigured: "No Device Checks configured",
+  configureAtLeastOneDevice:
+    "Configure at least one Device Check before you create a Device Profile",
+  deviceChecksCuurentTab: "currentTab=%22tests%22",
+  settingsCurrentTab: "currentTab=%22settings%22",
+  continueWithoutSaving: "Continue without save?",
 };
 
 export const MSG = {
@@ -223,8 +235,12 @@ export const DEVICE_CHECKS_DATA = [
     //Criteria
     realTimeProtectionEnabled: true,
     bypassDeviceCheckforunsupportedSDPClients: true,
-  }
+  },
 ];
+
+export function assertPageURL(url) {
+  cy.url().should("include", url);
+}
 
 export function navigateToDevicePosture() {
   cy.get(LOCATORS.devicePostureButton).click();
@@ -251,7 +267,7 @@ export function assertTextContent(selector, text) {
 export function assertEmptyTable(selector) {
   assertTextContent(selector, PAGE_CONTENT_TEXT.noData);
 }
-LOCATORS.deviceChecksTable1
+LOCATORS.deviceChecksTable1;
 export function assertVisibility(selector) {
   cy.get(selector).should("be.visible");
 }

@@ -1,4 +1,5 @@
 /// <reference types="Cypress"/>
+import { clickButton } from "../support/client_connectivity_policy_helper.js";
 import * as devicePostureHelper from "../support/device_posture_helper.js";
 import * as loginHelper from "../support/login_to_system_helper.js";
 import { it } from "mocha";
@@ -6,9 +7,78 @@ import { it } from "mocha";
 describe("Trusted Network Page", () => {
   // Run this code before each test
   beforeEach(() => {
-    loginHelper.loginToCMA(loginHelper.LOGIN_CREDENTIALS);
-    loginHelper.navigateToAccess();
-    devicePostureHelper.navigateToDevicePosture();
+    loginHelper.loginToCMAUsingDirectURL(
+      loginHelper.LOGIN_CREDENTIALS,
+      loginHelper.DEVICE_POSTURE_URL
+    );
+  });
+
+  it('Assert "No Device Checks configured" page ', () => {
+    devicePostureHelper.assertTextContent(
+      devicePostureHelper.LOCATORS.noDeviceChecksConfigText1,
+      devicePostureHelper.PAGE_CONTENT_TEXT.noDeviceChecksConfigured
+    );
+    devicePostureHelper.assertTextContent(
+      devicePostureHelper.LOCATORS.noDeviceChecksConfigText2,
+      devicePostureHelper.PAGE_CONTENT_TEXT.configureAtLeastOneDevice
+    );
+    devicePostureHelper.clickButton(
+      devicePostureHelper.LOCATORS.createDeviceChecksButton
+    );
+    devicePostureHelper.assertPageURL(
+      devicePostureHelper.PAGE_CONTENT_TEXT.deviceChecksCuurentTab
+    );
+  });
+
+  it("Assert Continue dialog in settings page", () => {
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.settings);
+    devicePostureHelper.typeValidInput(
+      devicePostureHelper.LOCATORS.picker,
+      devicePostureHelper.PERIODS[2]
+    ); // change the value from 0 to 20
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
+    devicePostureHelper.assertTextContent(
+      devicePostureHelper.LOCATORS.dialogTitle,
+      devicePostureHelper.PAGE_CONTENT_TEXT.continueWithoutSaving
+    );
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.stayButton);
+    devicePostureHelper.assertPageURL(
+      devicePostureHelper.PAGE_CONTENT_TEXT.settingsCurrentTab
+    );
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
+    devicePostureHelper.clickButton(
+      devicePostureHelper.LOCATORS.continueButton
+    );
+
+    devicePostureHelper.assertPageURL(
+      devicePostureHelper.PAGE_CONTENT_TEXT.deviceChecksCuurentTab
+    );
+  });
+
+  it.only('Assert Continue dialog after adding device check without saving', () => {
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
+    devicePostureHelper.addNewDeviceCheck(
+      devicePostureHelper.DEVICE_CHECKS_DATA[0]
+    );
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.settings);
+    devicePostureHelper.assertTextContent(
+      devicePostureHelper.LOCATORS.dialogTitle,
+      devicePostureHelper.PAGE_CONTENT_TEXT.continueWithoutSaving
+    );
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.stayButton);
+    devicePostureHelper.assertPageURL(
+      devicePostureHelper.PAGE_CONTENT_TEXT.deviceChecksCuurentTab
+    );
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.settings);
+    devicePostureHelper.clickButton(
+      devicePostureHelper.LOCATORS.continueButton
+    );
+
+    devicePostureHelper.assertPageURL(
+      devicePostureHelper.PAGE_CONTENT_TEXT.settingsCurrentTab
+    );
+
+    
   });
 
   it("Assert Page Content", () => {
@@ -89,7 +159,9 @@ describe("Trusted Network Page", () => {
     for (let i = 0; i < 5; i++) {
       devicePostureHelper.DeleteByIndex(1);
     }
-    devicePostureHelper.assertEmptyTable(devicePostureHelper.LOCATORS.deviceProfilesTable);
+    devicePostureHelper.assertEmptyTable(
+      devicePostureHelper.LOCATORS.deviceProfilesTable
+    );
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
     devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
 
