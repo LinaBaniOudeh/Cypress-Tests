@@ -147,7 +147,7 @@ describe("Trusted Network Page", () => {
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
   });
 
-  it.only("Assert unable to delete device check when it being used by device profile ", () => {
+  it("Assert unable to delete device check when it being used by device profile ", () => {
     devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
 
     devicePostureHelper.deleteRow(1);

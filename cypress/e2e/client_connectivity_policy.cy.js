@@ -57,7 +57,7 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it.only("Assert unable to delete device profile rule when it being used by client_connectivity rule ", () => {
+  it("Assert unable to delete device profile rule when it being used by client_connectivity rule ", () => {
     devicePostureHelper.navigateToDevicePosture();
     devicePostureHelper.chooseOption(1, devicePostureHelper.OPTIONS.delete); // 1 means delete first element by index
 
