@@ -58,6 +58,8 @@ export const LOCATORS = {
   confirmEnableRuleButton:
     '[data-testid="catodialog-actions"] button.MuiV5-Button-contained',
   ruleTable1: '[data-testid="awesometable-table-device_rules"] tbody tr',
+  dialog: '[data-testid="catodialog-content"]',
+
 };
 
 export const PAGE_CONTENT_TEXT = {
@@ -148,7 +150,7 @@ export function assertTextContent(selector, text) {
 export function assertEmptyTable(selector) {
   assertTextContent(selector, PAGE_CONTENT_TEXT.noData);
 }
-LOCATORS.deviceChecksTable1;
+
 export function assertVisibility(selector) {
   cy.get(selector).should("be.visible");
 }

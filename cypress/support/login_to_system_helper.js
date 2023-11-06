@@ -5,6 +5,8 @@ export const DEVICE_POSTURE_URL =
 
 export const CLIENT_CONNECTIVITY_POLICY_URL =
   "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;AccessPolicy";
+export const CLIENT_ROLLOUT_URL =
+  "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;ClientRollout";
 export const LOGIN_CREDENTIALS = [
   {
     userName: "leena.baniodeh@exalt.ps",
