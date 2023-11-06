@@ -32,12 +32,13 @@ export const PAGE_CONTENT_TEXT = {
   downloadPKG: "Download PKG",
   viewUpgradedUsers:"View upgraded users",
   versionReleaseNotes:"Version release notes",
+  usersPageTitle:"Cato|Leena-testing - Users"
 };
 
-export const IPs = {
-  windowsIp: "13.6.102.737",
-  macOsIp: "5.4.0.270",
-  linuxIp: "5.1.119.19",
+export const VERSIONS = {
+  windowsVersion: "13.6.102.737",
+  macOsVersion: "5.4.0.270",
+  linuxVersion: "5.1.119.19",
 };
 
 export function assertSave(message) {
@@ -72,7 +73,7 @@ export function assertVisibility(selector) {
 }
 
 export function assertPageTitle(title){
-    cy.title().should('contain.text', title)
+    cy.title().should('include', title)
 }
 
 export function assertPageURL(url){
@@ -92,7 +93,7 @@ export function assertPageContent() {
     LOCATORS.windowsHeadSection,
     PAGE_CONTENT_TEXT.windowsClient
   );
-  assertTextContent(LOCATORS.windowsHeadSection, IPs.windowsIp);
+  assertTextContent(LOCATORS.windowsHeadSection, VERSIONS.windowsVersion);
   assertTextContent(
     LOCATORS.windowsHeadSection,
     PAGE_CONTENT_TEXT.recentlyConnected
@@ -111,7 +112,7 @@ export function assertPageContent() {
   );
 
   assertTextContent(LOCATORS.macOsHeadSection, PAGE_CONTENT_TEXT.macOsClient);
-  assertTextContent(LOCATORS.macOsHeadSection, IPs.macOsIp);
+  assertTextContent(LOCATORS.macOsHeadSection, VERSIONS.macOsVersion);
   assertTextContent(
     LOCATORS.macOsHeadSection,
     PAGE_CONTENT_TEXT.recentlyConnected
@@ -130,7 +131,7 @@ export function assertPageContent() {
   );
 
   assertTextContent(LOCATORS.linuxHeadSection, PAGE_CONTENT_TEXT.linuxClient);
-  assertTextContent(LOCATORS.linuxHeadSection, IPs.linuxIp);
+  assertTextContent(LOCATORS.linuxHeadSection, VERSIONS.linuxVersion);
   assertTextContent(
     LOCATORS.linuxHeadSection,
     PAGE_CONTENT_TEXT.recentlyConnected

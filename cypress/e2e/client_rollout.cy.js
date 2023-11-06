@@ -61,16 +61,17 @@ describe("Trusted Network Page", () => {
       clientRolloutHelper.LOCATORS.listBox,
       clientRolloutHelper.PAGE_CONTENT_TEXT.versionReleaseNotes
     );
-
     clientRolloutHelper.chooseFromDropDown(
       clientRolloutHelper.LOCATORS.moreInfo,
       clientRolloutHelper.PAGE_CONTENT_TEXT.viewUpgradedUsers,
       clientRolloutHelper.LOCATORS.listBox
     );
-
+    clientRolloutHelper.assertPageTitle(
+      clientRolloutHelper.PAGE_CONTENT_TEXT.usersPageTitle
+    );
     clientRolloutHelper.assertInputValue(
       clientRolloutHelper.LOCATORS.clientVersionInput,
-      clientRolloutHelper.IPs.linuxIp
+      clientRolloutHelper.VERSIONS.linuxVersion
     );
   });
 });
