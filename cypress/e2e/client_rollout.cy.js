@@ -55,7 +55,7 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it.only('Test "More Info" button', () => {
+  it('Test "More Info" button', () => {
     clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.moreInfo);
     clientRolloutHelper.assertTextContent(
       clientRolloutHelper.LOCATORS.listBox,
