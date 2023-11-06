@@ -29,7 +29,7 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it("Assert Continue dialog in settings page", () => {
+  it("Assert Continue dialog in settings page after changing the period without saving", () => {
     devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.settings);
     devicePostureHelper.typeValidInput(
       devicePostureHelper.LOCATORS.picker,
@@ -147,6 +147,19 @@ describe("Trusted Network Page", () => {
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
   });
 
+  it.only("Assert unable to delete device check when it being used by device profile ", () => {
+    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
+
+    devicePostureHelper.deleteRow(1);
+    devicePostureHelper.assertTextContent(
+      devicePostureHelper.LOCATORS.dialogContent,
+      devicePostureHelper.PAGE_CONTENT_TEXT.unableToDeleteDeviceCheck
+    );
+    devicePostureHelper.clickButton(
+      devicePostureHelper.LOCATORS.dialogActionButton
+    );
+  });
+
   it("Teardown", () => {
     //teardown
     devicePostureHelper.clickButton(
@@ -168,15 +181,5 @@ describe("Trusted Network Page", () => {
       devicePostureHelper.LOCATORS.deviceChecksTable1
     );
     devicePostureHelper.assertSave(devicePostureHelper.MSG.savedSuccessfully);
-  });
-
-  it.only("Assert unable to delete device check when it being used by device profile ", () => {
-    devicePostureHelper.clickButton(devicePostureHelper.LOCATORS.deviceChecks);
-
-    devicePostureHelper.deleteRow(1);
-    devicePostureHelper.assertTextContent(
-      devicePostureHelper.LOCATORS.dialog,
-      devicePostureHelper.PAGE_CONTENT_TEXT.unableToDeleteDeviceCheck
-    );
   });
 });
