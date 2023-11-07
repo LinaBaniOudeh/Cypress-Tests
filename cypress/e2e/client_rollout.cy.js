@@ -232,7 +232,6 @@ describe("Trusted Network Page", () => {
       clientRolloutHelper.LOCATORS.linuxModeInput,
       clientRolloutHelper.MODE.userManaged
     );
-
   });
 
   it('Test set back Mode to "silent"', () => {
@@ -270,6 +269,62 @@ describe("Trusted Network Page", () => {
       clientRolloutHelper.LOCATORS.linuxModeInput,
       clientRolloutHelper.MODE.silent
     );
+  });
 
+  it('Assert "Pilot Group" page content and # of SDP Users in listBox ', () => {
+    clientRolloutHelper.clickButton(
+      clientRolloutHelper.LOCATORS.pilotGroupButton
+    );
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.header,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.pilotGroup
+    );
+
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.header,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.defineGroup
+    );
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.dropdownMenu);
+    // Assert the number of items in the list box
+    cy.get(clientRolloutHelper.LOCATORS.listbox3)
+      .find(clientRolloutHelper.LOCATORS.listBoxItem)
+      .should("have.length", 5);
+  });
+  it("Test add all SDP Users", () => {
+    clientRolloutHelper.clickButton(
+      clientRolloutHelper.LOCATORS.pilotGroupButton
+    );
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.dropdownMenu);
+    clientRolloutHelper.SDP_USERS.forEach((user) => {
+      clientRolloutHelper.chooseFromDropDown1(
+        user,
+        clientRolloutHelper.LOCATORS.listbox3
+      );
+    });
+    clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+  });
+
+  it("Test Remove all SDP Users", () => {
+    clientRolloutHelper.clickButton(
+      clientRolloutHelper.LOCATORS.pilotGroupButton
+    );
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.dropdownMenu);
+    clientRolloutHelper.SDP_USERS.forEach((user) => {
+      clientRolloutHelper.chooseFromDropDown1(
+        user,
+        clientRolloutHelper.LOCATORS.listbox3
+      );
+    });
+    clientRolloutHelper.assertEmptyTable(
+      clientRolloutHelper.LOCATORS.sdpUsersTable,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.noData
+    );
+    cy.reload()
+    clientRolloutHelper.deleteTableContent(clientRolloutHelper.LOCATORS.sdpUsersTable, 5)
+    clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+    clientRolloutHelper.assertEmptyTable(
+      clientRolloutHelper.LOCATORS.sdpUsersTable,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.noData
+    );
   });
 });

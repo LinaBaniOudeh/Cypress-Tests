@@ -15,7 +15,7 @@ export const LOCATORS = {
   listBox: '[role="tooltip"] .MuiV5-List-root',
   clientVersionInput: ".MuiV5-InputBase-root:nth(5) input",
   upgradePolicy: 'button[data-testid="tabs-btn-upgradePolicyTab"]',
-  upgradePolicyHeader: ".MuiV5-CardHeader-root",
+  header: ".MuiV5-CardHeader-root",
   upgradePolicyWindowsClient: '[data-testid="fieldlabel-root"] h6:nth(0)',
   upgradePolicyMacOsClient: '[data-testid="fieldlabel-root"] h6:nth(1)',
   upgradePolicyLinuxClient: '[data-testid="fieldlabel-root"] h6:nth(2)',
@@ -28,9 +28,25 @@ export const LOCATORS = {
   linuxModeInput:
     '[data-testid="select-controlUpgradePolicy.upgradePolicyLinux"]',
   listbox2: ".MuiV5-Menu-paper",
+  listbox3: ".MuiV5-Autocomplete-popper",
   confirmButton:
-  '[data-testid="catodialog-actions"] button.MuiV5-Button-contained',  
+    '[data-testid="catodialog-actions"] button.MuiV5-Button-contained',
+  pilotGroupButton: 'button[data-testid="tabs-btn-pilotGroup"]',
+  dropdownMenu: '[placeholder="Search or select SDP User"]',
+  listBoxItem: ".MuiV5-ListItemButton-root",
+  sdpUsersTable:
+    'table[data-testid="awesometable-table-controlUpgradePolicy.canaryUsers"]',
+  deleteButton: 'button[data-testid="table-btn-delete-row"]',
+  tableTr: "table tr",
+  tbodyTr: "tbody tr",
 };
+export const SDP_USERS = [
+  "Leena34 BaniOdeh",
+  "Leena BaniOdeh",
+  "raghad.qadah@exalt.ps raghad.qadah@exalt.ps",
+  "Leena4 BaniOdeh",
+  "Leena5 BaniOdeh",
+];
 
 export const PAGE_CONTENT_TEXT = {
   pageTitle: "Client Rollout",
@@ -55,7 +71,10 @@ export const PAGE_CONTENT_TEXT = {
   managedByTheAdmin: "Managed by the Admin",
   switchingAlert:
     "You are switching the Client Upgrade policy from Managed to Automatic Silent. The new policy will start gradually upgrading Clients to the newest version.",
-
+  pilotGroup: "Pilot Group",
+  defineGroup:
+    "Define a group of SDP Users to be upgraded first. Applies only when using the Automatic by Cato Upgrade Policy.",
+  noData: "No data",
 };
 
 export const MSG = {
@@ -83,6 +102,10 @@ export function assertInputValue(selector, value) {
   cy.get(selector).should("have.value", value);
 }
 
+export function getTableRowCount(tableSelector) {
+  return cy.get(tableSelector).find(LOCATORS.tbodyTr).its("length");
+}
+
 export function assertPopUpMessage(message) {
   cy.get(LOCATORS.popUpMessage)
     .scrollIntoView()
@@ -97,8 +120,8 @@ export function clickButton(selector) {
 export function assertTextContent(selector, text) {
   cy.get(selector).should("contain.text", text);
 }
-export function assertEmptyTable(selector) {
-  assertTextContent(selector, PAGE_CONTENT_TEXT.noData);
+export function assertEmptyTable(selector, text) {
+  assertTextContent(selector, text);
 }
 
 export function assertVisibility(elementSelector, shouldBeVisible = true) {
@@ -132,12 +155,18 @@ export function chooseFromDropDown(dropdownSelector, optionText, listSelector) {
     .scrollIntoView()
     .click({ force: true });
 }
+
+export function chooseFromDropDown1(optionText, listSelector) {
+  // cy.get(dropdownSelector).click(); // Click to open the dropdown
+  cy.get(listSelector)
+    .contains(optionText)
+    .scrollIntoView()
+    .click({ force: true });
+}
+
 export function assertUpgradePolicyPageContent() {
-  assertTextContent(
-    LOCATORS.upgradePolicyHeader,
-    PAGE_CONTENT_TEXT.upgradePolicyText
-  );
-  assertTextContent(LOCATORS.upgradePolicyHeader, PAGE_CONTENT_TEXT.policyText);
+  assertTextContent(LOCATORS.header, PAGE_CONTENT_TEXT.upgradePolicyText);
+  assertTextContent(LOCATORS.header, PAGE_CONTENT_TEXT.policyText);
   assertTextContent(
     LOCATORS.upgradePolicyWindowsClient,
     PAGE_CONTENT_TEXT.windowsClient
@@ -213,3 +242,16 @@ export function assertRolloutStatusPageContent() {
     PAGE_CONTENT_TEXT.gradualRollout
   );
 }
+
+export function deleteTableContent(tableSelector, rowCount) {
+  // getTableRowCount(tableSelector).then((rowCount) => {
+    for (let i = 0; i < rowCount; i++) {
+      cy.wait(1500);
+      deleteRow(1);
+    }
+  // });
+}
+export function deleteRow(index) {
+  cy.get(LOCATORS.tableTr).eq(index).find(LOCATORS.deleteButton).click();
+}
+
