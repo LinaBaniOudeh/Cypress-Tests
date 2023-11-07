@@ -235,7 +235,7 @@ describe("Trusted Network Page", () => {
 
   });
 
-  it.only('Test set back Mode to "silent"', () => {
+  it('Test set back Mode to "silent"', () => {
     clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
     clientRolloutHelper.chooseFromDropDown(
       clientRolloutHelper.LOCATORS.windowsModeInput,
