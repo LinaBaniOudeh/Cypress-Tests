@@ -12,8 +12,8 @@ describe("Trusted Network Page", () => {
     );
   });
 
-  it("Test Assert Page content", () => {
-    clientRolloutHelper.assertPageContent();
+  it("Test Assert Rollout Status Page content", () => {
+    clientRolloutHelper.assertRolloutStatusPageContent();
   });
 
   it('Test "Pause Rollout" button', () => {
@@ -73,5 +73,203 @@ describe("Trusted Network Page", () => {
       clientRolloutHelper.LOCATORS.clientVersionInput,
       clientRolloutHelper.VERSIONS.linuxVersion
     );
+  });
+
+  it("Test Assert Upgrade Policy Page Content", () => {
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
+    clientRolloutHelper.assertUpgradePolicyPageContent();
+  });
+
+  it("Assert default values", () => {
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
+    //windows
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.windowsPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato
+    );
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      clientRolloutHelper.MODE.silent
+    );
+    //macOs
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.macOsPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato
+    );
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      clientRolloutHelper.MODE.silent
+    );
+    //linux
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.linuxPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato
+    );
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      clientRolloutHelper.MODE.silent
+    );
+  });
+
+  it('Test the disappearance of Mode dropMenu when the policy is set to "Managed by the Admin"', () => {
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
+    //WINDOWS
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      true
+    );
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.windowsPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      false
+    );
+    //MACos
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      true
+    );
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.macOsPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      false
+    );
+    //linux
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      true
+    );
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.linuxPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      false
+    );
+
+    clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+  });
+  it('Assert switching alert when changing from "Managed by the Admin" to "Automatic by Cato" ', () => {
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
+    //Windows
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.windowsPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.confirmButton);
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      true
+    );
+    //MacOs
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.macOsPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.confirmButton);
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      true
+    );
+    //linux
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.linuxPolicyInput,
+      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.confirmButton);
+    clientRolloutHelper.assertElementExistence(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      true
+    );
+    clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+  });
+
+  it('assert changing Mode to "User Managed"', () => {
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      clientRolloutHelper.MODE.userManaged,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      clientRolloutHelper.MODE.userManaged,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      clientRolloutHelper.MODE.userManaged,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+    clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      clientRolloutHelper.MODE.userManaged
+    );
+
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      clientRolloutHelper.MODE.userManaged
+    );
+
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      clientRolloutHelper.MODE.userManaged
+    );
+
+  });
+
+  it.only('Test set back Mode to "silent"', () => {
+    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      clientRolloutHelper.MODE.silent,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      clientRolloutHelper.MODE.silent,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+
+    clientRolloutHelper.chooseFromDropDown(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      clientRolloutHelper.MODE.silent,
+      clientRolloutHelper.LOCATORS.listbox2
+    );
+    clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      clientRolloutHelper.MODE.silent
+    );
+
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.macOsModeInput,
+      clientRolloutHelper.MODE.silent
+    );
+
+    clientRolloutHelper.assertTextContent(
+      clientRolloutHelper.LOCATORS.linuxModeInput,
+      clientRolloutHelper.MODE.silent
+    );
+
   });
 });
