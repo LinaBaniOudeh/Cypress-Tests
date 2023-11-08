@@ -1,3 +1,5 @@
+import * as loginHelper from "../support/login_to_system_helper";
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -27,3 +29,14 @@ Cypress.Commands.add('waitUntilElementNotExists', { prevSubject: true }, (subjec
     cy.wrap(subject).should('not.exist', { timeout: 10000 });
   });
   
+Cypress.Commands.add('bypassLogin', (name, password) => {
+    cy.session([name, password], () => {
+            cy.visit(loginHelper.LOGIN_URL)
+            cy.get(loginHelper.LOCATORS.userNameField).type(name);
+            cy.get(loginHelper.LOCATORS.passwordField).type(password);
+            cy.get(loginHelper.LOCATORS.submitButton).click();
+        },
+        {
+            cacheAcrossSpecs:true
+        })
+ });

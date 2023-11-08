@@ -3,13 +3,16 @@ import * as clientRolloutHelper from "../support/client_rollout_helper";
 import * as loginHelper from "../support/login_to_system_helper.js";
 
 import { it } from "mocha";
-describe("Trusted Network Page", () => {
+describe("Ckient Rollout Page", () => {
   // Run this code before each test
-  beforeEach(() => {
-    loginHelper.loginToCMAUsingDirectURL(
-      loginHelper.LOGIN_CREDENTIALS,
-      loginHelper.CLIENT_ROLLOUT_URL
+  before(() => {
+
+    cy.bypassLogin(
+      loginHelper.LOGIN_CREDENTIALS[0].userName,
+      loginHelper.LOGIN_CREDENTIALS[0].password
     );
+    loginHelper.navigateToURL(loginHelper.CLIENT_ROLLOUT_URL);
+
   });
 
   it("Test Assert Rollout Status Page content", () => {
@@ -76,12 +79,12 @@ describe("Trusted Network Page", () => {
   });
 
   it("Test Assert Upgrade Policy Page Content", () => {
+    loginHelper.navigateToURL(loginHelper.CLIENT_ROLLOUT_UPGRADE_POLICY);
     clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
     clientRolloutHelper.assertUpgradePolicyPageContent();
   });
 
   it("Assert default values", () => {
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
     //windows
     clientRolloutHelper.assertTextContent(
       clientRolloutHelper.LOCATORS.windowsPolicyInput,
@@ -112,163 +115,107 @@ describe("Trusted Network Page", () => {
   });
 
   it('Test the disappearance of Mode dropMenu when the policy is set to "Managed by the Admin"', () => {
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
     //WINDOWS
-    clientRolloutHelper.assertElementExistence(
+    clientRolloutHelper.changePolicy(
+      clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
       clientRolloutHelper.LOCATORS.windowsModeInput,
-      true
-    );
-    clientRolloutHelper.chooseFromDropDown(
       clientRolloutHelper.LOCATORS.windowsPolicyInput,
-      clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
       clientRolloutHelper.LOCATORS.listbox2
     );
-    clientRolloutHelper.assertElementExistence(
-      clientRolloutHelper.LOCATORS.windowsModeInput,
-      false
-    );
+
     //MACos
-    clientRolloutHelper.assertElementExistence(
+    clientRolloutHelper.changePolicy(
+      clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
       clientRolloutHelper.LOCATORS.macOsModeInput,
-      true
-    );
-    clientRolloutHelper.chooseFromDropDown(
       clientRolloutHelper.LOCATORS.macOsPolicyInput,
-      clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
       clientRolloutHelper.LOCATORS.listbox2
     );
-    clientRolloutHelper.assertElementExistence(
-      clientRolloutHelper.LOCATORS.macOsModeInput,
-      false
-    );
+
     //linux
-    clientRolloutHelper.assertElementExistence(
-      clientRolloutHelper.LOCATORS.linuxModeInput,
-      true
-    );
-    clientRolloutHelper.chooseFromDropDown(
-      clientRolloutHelper.LOCATORS.linuxPolicyInput,
+    clientRolloutHelper.changePolicy(
       clientRolloutHelper.PAGE_CONTENT_TEXT.managedByTheAdmin,
-      clientRolloutHelper.LOCATORS.listbox2
-    );
-    clientRolloutHelper.assertElementExistence(
       clientRolloutHelper.LOCATORS.linuxModeInput,
-      false
+      clientRolloutHelper.LOCATORS.linuxPolicyInput,
+      clientRolloutHelper.LOCATORS.listbox2
     );
 
     clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+    cy.reload();
   });
   it('Assert switching alert when changing from "Managed by the Admin" to "Automatic by Cato" ', () => {
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
     //Windows
-    clientRolloutHelper.chooseFromDropDown(
-      clientRolloutHelper.LOCATORS.windowsPolicyInput,
+    clientRolloutHelper.changePolicy(
       clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato,
+      clientRolloutHelper.LOCATORS.windowsModeInput,
+      clientRolloutHelper.LOCATORS.windowsPolicyInput,
       clientRolloutHelper.LOCATORS.listbox2
     );
 
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.confirmButton);
-    clientRolloutHelper.assertElementExistence(
-      clientRolloutHelper.LOCATORS.windowsModeInput,
-      true
-    );
     //MacOs
-    clientRolloutHelper.chooseFromDropDown(
-      clientRolloutHelper.LOCATORS.macOsPolicyInput,
+    clientRolloutHelper.changePolicy(
       clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato,
-      clientRolloutHelper.LOCATORS.listbox2
-    );
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.confirmButton);
-    clientRolloutHelper.assertElementExistence(
       clientRolloutHelper.LOCATORS.macOsModeInput,
-      true
-    );
-    //linux
-    clientRolloutHelper.chooseFromDropDown(
-      clientRolloutHelper.LOCATORS.linuxPolicyInput,
-      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato,
+      clientRolloutHelper.LOCATORS.macOsPolicyInput,
       clientRolloutHelper.LOCATORS.listbox2
     );
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.confirmButton);
-    clientRolloutHelper.assertElementExistence(
+
+    //linux
+    clientRolloutHelper.changePolicy(
+      clientRolloutHelper.PAGE_CONTENT_TEXT.AutomaticByCato,
       clientRolloutHelper.LOCATORS.linuxModeInput,
-      true
+      clientRolloutHelper.LOCATORS.linuxPolicyInput,
+      clientRolloutHelper.LOCATORS.listbox2
     );
+
     clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
+    cy.reload();
   });
 
   it('assert changing Mode to "User Managed"', () => {
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
-    clientRolloutHelper.chooseFromDropDown(
+
+    clientRolloutHelper.changeMode(
+      clientRolloutHelper.MODE.userManaged,
       clientRolloutHelper.LOCATORS.windowsModeInput,
-      clientRolloutHelper.MODE.userManaged,
       clientRolloutHelper.LOCATORS.listbox2
     );
 
-    clientRolloutHelper.chooseFromDropDown(
+    clientRolloutHelper.changeMode(
+      clientRolloutHelper.MODE.userManaged,
       clientRolloutHelper.LOCATORS.macOsModeInput,
-      clientRolloutHelper.MODE.userManaged,
       clientRolloutHelper.LOCATORS.listbox2
     );
-
-    clientRolloutHelper.chooseFromDropDown(
-      clientRolloutHelper.LOCATORS.linuxModeInput,
+    clientRolloutHelper.changeMode(
       clientRolloutHelper.MODE.userManaged,
+      clientRolloutHelper.LOCATORS.linuxModeInput,
       clientRolloutHelper.LOCATORS.listbox2
     );
     clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
 
-    clientRolloutHelper.assertTextContent(
-      clientRolloutHelper.LOCATORS.windowsModeInput,
-      clientRolloutHelper.MODE.userManaged
-    );
-
-    clientRolloutHelper.assertTextContent(
-      clientRolloutHelper.LOCATORS.macOsModeInput,
-      clientRolloutHelper.MODE.userManaged
-    );
-
-    clientRolloutHelper.assertTextContent(
-      clientRolloutHelper.LOCATORS.linuxModeInput,
-      clientRolloutHelper.MODE.userManaged
-    );
+    cy.reload();
   });
 
   it('Test set back Mode to "silent"', () => {
-    clientRolloutHelper.clickButton(clientRolloutHelper.LOCATORS.upgradePolicy);
-    clientRolloutHelper.chooseFromDropDown(
+
+    clientRolloutHelper.changeMode(
+      clientRolloutHelper.MODE.silent,
       clientRolloutHelper.LOCATORS.windowsModeInput,
-      clientRolloutHelper.MODE.silent,
       clientRolloutHelper.LOCATORS.listbox2
     );
 
-    clientRolloutHelper.chooseFromDropDown(
+    clientRolloutHelper.changeMode(
+      clientRolloutHelper.MODE.silent,
       clientRolloutHelper.LOCATORS.macOsModeInput,
-      clientRolloutHelper.MODE.silent,
       clientRolloutHelper.LOCATORS.listbox2
     );
 
-    clientRolloutHelper.chooseFromDropDown(
-      clientRolloutHelper.LOCATORS.linuxModeInput,
+    clientRolloutHelper.changeMode(
       clientRolloutHelper.MODE.silent,
+      clientRolloutHelper.LOCATORS.linuxModeInput,
       clientRolloutHelper.LOCATORS.listbox2
     );
     clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
 
-    clientRolloutHelper.assertTextContent(
-      clientRolloutHelper.LOCATORS.windowsModeInput,
-      clientRolloutHelper.MODE.silent
-    );
-
-    clientRolloutHelper.assertTextContent(
-      clientRolloutHelper.LOCATORS.macOsModeInput,
-      clientRolloutHelper.MODE.silent
-    );
-
-    clientRolloutHelper.assertTextContent(
-      clientRolloutHelper.LOCATORS.linuxModeInput,
-      clientRolloutHelper.MODE.silent
-    );
+    cy.reload();
   });
 
   it('Assert "Pilot Group" page content and # of SDP Users in listBox ', () => {
@@ -319,12 +266,16 @@ describe("Trusted Network Page", () => {
       clientRolloutHelper.LOCATORS.sdpUsersTable,
       clientRolloutHelper.PAGE_CONTENT_TEXT.noData
     );
-    cy.reload()
-    clientRolloutHelper.deleteTableContent(clientRolloutHelper.LOCATORS.sdpUsersTable, 5)
+    cy.reload();
+    clientRolloutHelper.deleteTableContent(
+      clientRolloutHelper.LOCATORS.sdpUsersTable,
+      5
+    );
     clientRolloutHelper.assertSave(clientRolloutHelper.MSG.savedSuccessfully);
     clientRolloutHelper.assertEmptyTable(
       clientRolloutHelper.LOCATORS.sdpUsersTable,
       clientRolloutHelper.PAGE_CONTENT_TEXT.noData
     );
   });
+
 });

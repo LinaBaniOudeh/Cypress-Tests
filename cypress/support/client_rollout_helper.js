@@ -245,13 +245,35 @@ export function assertRolloutStatusPageContent() {
 
 export function deleteTableContent(tableSelector, rowCount) {
   // getTableRowCount(tableSelector).then((rowCount) => {
-    for (let i = 0; i < rowCount; i++) {
-      cy.wait(1500);
-      deleteRow(1);
-    }
+  for (let i = 0; i < rowCount; i++) {
+    cy.wait(1500);
+    deleteRow(1);
+  }
   // });
 }
 export function deleteRow(index) {
   cy.get(LOCATORS.tableTr).eq(index).find(LOCATORS.deleteButton).click();
+}
+
+export function changeMode(mode, modeInputSelector, listBoxSelector) {
+  chooseFromDropDown(modeInputSelector, mode, listBoxSelector);
+  assertTextContent(modeInputSelector, mode);
+}
+
+export function changePolicy(policy,  modeInputSelector, policyInputSelector, listBoxSelector) 
+  {
+    chooseFromDropDown(
+      policyInputSelector,
+      policy,
+      listBoxSelector);
+
+    if(policy == PAGE_CONTENT_TEXT.managedByTheAdmin)
+    {
+     assertElementExistence(modeInputSelector, false);
+    }
+    else{
+     clickButton(LOCATORS.confirmButton);
+     assertElementExistence(modeInputSelector, true);
+    }
 }
 

@@ -3,7 +3,7 @@ import * as devicePostureHelper from "../support/device_posture_helper.js";
 import * as loginHelper from "../support/login_to_system_helper.js";
 import { it } from "mocha";
 
-describe("Trusted Network Page", () => {
+describe("Device Posture Page", () => {
   // Run this code before each test
   beforeEach(() => {
     loginHelper.loginToCMAUsingDirectURL(

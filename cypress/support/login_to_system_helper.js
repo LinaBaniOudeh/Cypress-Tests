@@ -7,6 +7,9 @@ export const CLIENT_CONNECTIVITY_POLICY_URL =
   "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;AccessPolicy";
 export const CLIENT_ROLLOUT_URL =
   "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;ClientRollout";
+
+export const CLIENT_ROLLOUT_UPGRADE_POLICY =
+  "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;ClientRollout?currentTab=%22upgradePolicyTab%22";
 export const LOGIN_CREDENTIALS = [
   {
     userName: "leena.baniodeh@exalt.ps",
@@ -108,6 +111,10 @@ export function loginToCMAUsingDirectURL(LOGIN_CREDENTIALS, url) {
   cy.get(LOCATORS.userNameField).type(LOGIN_CREDENTIALS[0].userName);
   cy.get(LOCATORS.passwordField).type(LOGIN_CREDENTIALS[0].password);
   cy.get(LOCATORS.submitButton).click();
+}
+
+export function navigateToURL(url) {
+  cy.visit(url);
 }
 
 export function navigateToAccess() {
