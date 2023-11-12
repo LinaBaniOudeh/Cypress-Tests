@@ -27,10 +27,10 @@ export const MSG = {
 };
 
 export const imagesToUpload = {
-  validImage: "cypress/fixtures/validImage.png",
-  InvalidImage: "cypress/fixtures/invalidImage.jpg",
-  invalidType: "cypress/fixtures/invalidType.webp",
-  largeImageSize: "cypress/fixtures/largeImageSize.jpg",
+  validImage: "cypress/fixtures/images/validImage.png",
+  InvalidImage: "cypress/fixtures/images/invalidImage.jpg",
+  invalidType: "cypress/fixtures/images/invalidType.webp",
+  largeImageSize: "cypress/fixtures/images/largeImageSize.jpg",
 };
 
 export function assertTextContent(selector, text) {
