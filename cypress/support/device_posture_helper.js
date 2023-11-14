@@ -273,7 +273,6 @@ export function assertTextContent(selector, text) {
 export function assertEmptyTable(selector) {
   assertTextContent(selector, PAGE_CONTENT_TEXT.noData);
 }
-LOCATORS.deviceChecksTable1;
 export function assertVisibility(selector) {
   cy.get(selector).should("be.visible");
 }
@@ -378,6 +377,7 @@ export function expandDropdownIfNotExpanded(selector) {
     }
   });
 }
+
 export function typeValidInput(selector, input) {
   cy.get(selector).clear().type(input).should("have.value", input);
   cy.get(selector).should("have.attr", LOCATORS.ariaInvalid, "false");

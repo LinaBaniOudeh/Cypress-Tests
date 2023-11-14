@@ -11,9 +11,13 @@ export const CLIENT_ROLLOUT_URL =
 export const CLIENT_ROLLOUT_UPGRADE_POLICY =
   "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;ClientRollout?currentTab=%22upgradePolicyTab%22";
 
+export const CLIENT_CUSTOMIZATION_URL =
+  "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;CoBranding";
 
-export const CLIENT_CUSTOMIZATION_URL = "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;CoBranding"
-  export const LOGIN_CREDENTIALS = [
+export const CLIENT_ACCESS_URL =
+  "https://leena-testing.cc.test.catonet.works/#/account/90344/settings;AccountVpnSettings";
+
+export const LOGIN_CREDENTIALS = [
   {
     userName: "leena.baniodeh@exalt.ps",
     password: "Lena.1999",
