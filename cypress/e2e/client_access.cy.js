@@ -24,7 +24,7 @@ describe("Ckient Access Page", () => {
     cy.reload();
   });
 
-  it.only("Test Change Authentication from SSO to SSO", () => {
+  it("Test Change Authentication from SSO to SSO", () => {
     clientAccessHelper.expandDropdownIfNotExpanded(
       clientAccessHelper.LOCATORS.authentication
     );
@@ -68,7 +68,7 @@ describe("Ckient Access Page", () => {
     cy.reload();
   });
 
-  it('Test adding all operating systems under "Blocked operating systems" and assert "No option" will appear under "Operating systems that require a certificate" ', () => {
+  it.only('Test adding all operating systems under "Blocked operating systems" and assert "No option" will appear under "Operating systems that require a certificate" ', () => {
     clientAccessHelper.expandDropdownIfNotExpanded(
       clientAccessHelper.LOCATORS.deviceAuthentication
     );
@@ -97,16 +97,14 @@ describe("Ckient Access Page", () => {
     cy.reload();
   });
 
-  it('Assert selectd Os under "Blocked operating systems" will not appear under "Operating systems that require a certificate"', () => {
+  it.only('Assert selectd Os under "Blocked operating systems" will not appear under "Operating systems that require a certificate"', () => {
     const operatingSystemsList = [
       clientAccessHelper.OPERATING_SYSTEMS.windows,
       clientAccessHelper.OPERATING_SYSTEMS.macOS,
     ];
-
     clientAccessHelper.expandDropdownIfNotExpanded(
       clientAccessHelper.LOCATORS.deviceAuthentication
     );
-
     operatingSystemsList.forEach((os) => {
       clientAccessHelper.chooseFromDropDown(
         clientAccessHelper.LOCATORS.blockedOperatingSystems,
@@ -125,9 +123,22 @@ describe("Ckient Access Page", () => {
       clientAccessHelper.LOCATORS.osTable,
       operatingSystemsList
     );
+    clientAccessHelper.assertSave(clientAccessHelper.MSG.savedSuccessfully);
+    cy.reload();
   });
 
-  it('Assert selectd Os under "Operating systems that require a certificate" will not appear under "Blocked operating systems"', () => {
+  it.only("Test upload certificate and assert certificate table content ", () => {
+    clientAccessHelper.expandDropdownIfNotExpanded(
+      clientAccessHelper.LOCATORS.deviceAuthentication
+    );
+    clientAccessHelper.addCertificate(clientAccessHelper.CERTIFICATE);
+    clientAccessHelper.assertPopUpMessage(
+      clientAccessHelper.MSG.certificateUploadedSuccessfully
+    );
+    cy.reload();
+  });
+
+  it.only('Assert selectd Os under "Operating systems that require a certificate" will not appear under "Blocked operating systems"', () => {
     const operatingSystemsList = [
       clientAccessHelper.OPERATING_SYSTEMS.linux,
       clientAccessHelper.OPERATING_SYSTEMS.iOS,
@@ -154,21 +165,16 @@ describe("Ckient Access Page", () => {
       clientAccessHelper.LOCATORS.osCertificateTable,
       operatingSystemsList
     );
-
+    // clientAccessHelper.deleteRowByIndex(clientAccessHelper.LOCATORS.osCertificateTable, 0)
+    // cy.wait(500)
     // clientAccessHelper.assertTextContent(
     //   clientAccessHelper.LOCATORS.tableError,
     //   clientAccessHelper.PAGE_CONTENT.uploadCertificate
     // );
+    clientAccessHelper.assertSave(clientAccessHelper.MSG.savedSuccessfully);
   });
 
-  it("Test upload certificate and assert certificate table content ", () => {
-    clientAccessHelper.addCertificate(clientAccessHelper.CERTIFICATE)
-    clientAccessHelper.assertPopUpMessage(
-      clientAccessHelper.MSG.certificateUploadedSuccessfully
-    );
-  });
-
-  it("Test Assert certificate details", () => {
+  it.only("Test Assert certificate details", () => {
     const certificateDetails = Object.values(
       clientAccessHelper.CERTIFICATE.details
     );
@@ -180,24 +186,42 @@ describe("Ckient Access Page", () => {
       );
     });
     clientAccessHelper.clickButton(clientAccessHelper.LOCATORS.closeButton);
+    cy.reload();
   });
 
-  it("Test upload duplicate certificate and assert error msg", () => {
+  it.only("Test upload duplicate certificate and assert error msg", () => {
     clientAccessHelper.expandDropdownIfNotExpanded(
-        clientAccessHelper.LOCATORS.deviceAuthentication
-      );
-    clientAccessHelper.addCertificate(clientAccessHelper.CERTIFICATE)
+      clientAccessHelper.LOCATORS.deviceAuthentication
+    );
+    clientAccessHelper.addCertificate(clientAccessHelper.CERTIFICATE);
     clientAccessHelper.assertPopUpMessage(
-        clientAccessHelper.MSG.certificateAlreadyUploaded
-      );
+      clientAccessHelper.MSG.certificateAlreadyUploaded
+    );
+    cy.reload();
   });
 
-  it('Test Delete certificate', () => {
+  it.only("Test Delete certificate", () => {
     clientAccessHelper.expandDropdownIfNotExpanded(
-        clientAccessHelper.LOCATORS.deviceAuthentication
-      );
-    clientAccessHelper.deleteRowByIndex(clientAccessHelper.LOCATORS.certificateTable, 0)
+      clientAccessHelper.LOCATORS.deviceAuthentication
+    );
+    clientAccessHelper.deleteRowByIndex(
+      clientAccessHelper.LOCATORS.certificateTable,
+      0
+    );
     clientAccessHelper.assertSave(clientAccessHelper.MSG.savedSuccessfully);
+  });
 
+  it.only("Teardown", () => {
+    for (let index = 0; index < 2; index++) {
+      clientAccessHelper.deleteRowByIndex(
+        clientAccessHelper.LOCATORS.osCertificateTable,
+        0
+      );
+      clientAccessHelper.deleteRowByIndex(
+        clientAccessHelper.LOCATORS.osTable,
+        0
+      );
+    }
+    clientAccessHelper.assertSave(clientAccessHelper.MSG.savedSuccessfully);
   });
 });
