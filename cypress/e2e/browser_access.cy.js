@@ -166,25 +166,26 @@ describe("Browser Access Page", () => {
     browserAccessHelper.clickButton(browserAccessHelper.LOCATORS.confirmButton);
   });
 
-  it.only("teardown", () => {});
-  //delete all access policy rules
-  browserAccessHelper.clickButton(browserAccessHelper.LOCATORS.accessPolicy);
+  it("teardown", () => {
+    //delete all access policy rules
+    browserAccessHelper.clickButton(browserAccessHelper.LOCATORS.accessPolicy);
 
-  for (let i = 0; i < 3; i++) {
-    browserAccessHelper.DeleteByIndex(1);
-  }
-  browserAccessHelper.assertEmptyTable(
-    browserAccessHelper.LOCATORS.accessPolicyRuleTable
-  );
-  browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
-  browserAccessHelper.clickButton(
-    browserAccessHelper.LOCATORS.applicationButton
-  );
-  browserAccessHelper.deleteTableContent(
-    browserAccessHelper.LOCATORS.applicationTable2
-  );
-  browserAccessHelper.assertEmptyTable(
-    browserAccessHelper.LOCATORS.applicationTable1
-  );
-  browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
+    for (let i = 0; i < 3; i++) {
+      browserAccessHelper.DeleteByIndex(1);
+    }
+    browserAccessHelper.assertEmptyTable(
+      browserAccessHelper.LOCATORS.accessPolicyRuleTable
+    );
+    browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
+    browserAccessHelper.clickButton(
+      browserAccessHelper.LOCATORS.applicationButton
+    );
+    browserAccessHelper.deleteTableContent(
+      browserAccessHelper.LOCATORS.applicationTable2
+    );
+    browserAccessHelper.assertEmptyTable(
+      browserAccessHelper.LOCATORS.applicationTable1
+    );
+    browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
+  });
 });
