@@ -60,7 +60,15 @@ export const LOCATORS = {
   optionsButton: "div.MuiV5-Box-root button.MuiV5-IconButton-sizeSmall",
   optionsBox: ".MuiV5-Popper-root",
   confirmDeleteButton: "button.MuiButton-contained",
+  deleteButton: 'button[data-testid="table-btn-delete-row"]',
   tableTr: "table tr",
+  tbodyTr: "tbody tr",
+  dialogContent: '[data-testid="catodialog-content"]',
+  confirmButton: '[data-testid="catodialog-actions"] button',
+  accessPolicyRuleTable: '[data-testid="table-no-items"]',
+  applicationTable1:
+    '[data-testid="awesometable-table-browser-access-apps"] tbody tr',
+  applicationTable2: '[data-testid="awesometable-table-browser-access-apps"]',
 };
 
 export const OPTIONS = {
@@ -81,6 +89,7 @@ export const DOMAINS = {
   duplicateDomain: "www.example.com",
 };
 export const PAGE_CONTENT = {
+  noData: "No data",
   portalUrl: "Portal URL",
   leenaUrl: "Leena-testing.via.catonetworks.com",
   portalLogo: "Portal Logo",
@@ -99,7 +108,7 @@ export const PAGE_CONTENT = {
   thisInvalidNumber: "this: Invalid number",
   portMaxValueExceeded: "Max value is 65535",
   canNotDeleteApp:
-    "Can’t delete – the application is used in one or more rules. Please remove this application from the rules and then delete it.",
+    "Can’t delete – the application is used in one or more rules.\n Please remove this application from the rules and then delete it.",
 };
 
 export const IMAGES_TO_UPLOAD = {
@@ -469,7 +478,7 @@ export function chooseOption(rowIndex, option) {
 
 export function DeleteByIndex(rowIndex) {
   chooseOption(rowIndex, OPTIONS.delete);
-  clickButton(LOCATORS.confirmDeleteButton);
+  // clickButton(LOCATORS.confirmDeleteButton);
 }
 
 export function enableByIndex(rowIndex) {
@@ -478,4 +487,35 @@ export function enableByIndex(rowIndex) {
 
 export function disableByIndex(rowIndex) {
   chooseOption(rowIndex, OPTIONS.disable);
+}
+
+export function deleteRow(index) {
+  cy.get(LOCATORS.tableTr).eq(index).find(LOCATORS.deleteButton).click();
+}
+
+export function getTableRowCount(tableSelector) {
+  return cy.get(tableSelector).find(LOCATORS.tbodyTr).its("length");
+}
+
+export function deleteTableContent(tableSelector) {
+  getTableRowCount(tableSelector).then((rowCount) => {
+    for (let i = 0; i < rowCount; i++) {
+      cy.wait(1500);
+      deleteRow(1);
+    }
+  });
+}
+
+export function setSettings(image, ip, domain) {
+  //Logo
+  uploadIamge(image);
+  //NAT ip Range
+  typeValidInput(LOCATORS.natIPRangeInput + " input", ip);
+  //domain
+  addDomain(domain, true);
+  assertSave(MSG.savedSuccessfully);
+}
+
+export function assertEmptyTable(selector) {
+  assertTextContent(selector, PAGE_CONTENT_TEXT.noData);
 }

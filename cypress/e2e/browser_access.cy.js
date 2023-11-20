@@ -70,21 +70,11 @@ describe("Browser Access Page", () => {
   });
 
   it("Test set Valid Settings", () => {
-    //Logo
-    browserAccessHelper.uploadIamge(
-      browserAccessHelper.IMAGES_TO_UPLOAD.validImage
+    browserAccessHelper.setSettings(
+      browserAccessHelper.IMAGES_TO_UPLOAD.validImage,
+      browserAccessHelper.IPs.validIPwithSubnet,
+      browserAccessHelper.DOMAINS.validDomain
     );
-    //NAT ip Range
-    browserAccessHelper.typeValidInput(
-      browserAccessHelper.LOCATORS.natIPRangeInput + " input",
-      browserAccessHelper.IPs.validIPwithSubnet
-    );
-    //domain
-    browserAccessHelper.addDomain(
-      browserAccessHelper.DOMAINS.validDomain,
-      true
-    );
-    browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
     cy.reload();
   });
 
@@ -156,13 +146,45 @@ describe("Browser Access Page", () => {
     });
   });
 
-  it.only("Test Add access policy rules", () => {
+  it("Test Add access policy rules", () => {
     browserAccessHelper.clickButton(browserAccessHelper.LOCATORS.accessPolicy);
-    browserAccessHelper.ACCESS_POLICY_DATA.forEach(rule => {
-      browserAccessHelper.addNewRule(rule)
+    browserAccessHelper.ACCESS_POLICY_DATA.forEach((rule) => {
+      browserAccessHelper.addNewRule(rule);
     });
-    browserAccessHelper.assertSave(
-      browserAccessHelper.MSG.savedSuccessfully
-    );
+    browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
   });
+
+  it("Test Prevents App Deletion When Policy Is Using It", () => {
+    browserAccessHelper.clickButton(
+      browserAccessHelper.LOCATORS.applicationButton
+    );
+    browserAccessHelper.deleteRow(1);
+    browserAccessHelper.assertTextContent(
+      browserAccessHelper.LOCATORS.dialogContent,
+      browserAccessHelper.PAGE_CONTENT.canNotDeleteApp
+    );
+    browserAccessHelper.clickButton(browserAccessHelper.LOCATORS.confirmButton);
+  });
+
+  it.only("teardown", () => {});
+  //delete all access policy rules
+  browserAccessHelper.clickButton(browserAccessHelper.LOCATORS.accessPolicy);
+
+  for (let i = 0; i < 3; i++) {
+    browserAccessHelper.DeleteByIndex(1);
+  }
+  browserAccessHelper.assertEmptyTable(
+    browserAccessHelper.LOCATORS.accessPolicyRuleTable
+  );
+  browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
+  browserAccessHelper.clickButton(
+    browserAccessHelper.LOCATORS.applicationButton
+  );
+  browserAccessHelper.deleteTableContent(
+    browserAccessHelper.LOCATORS.applicationTable2
+  );
+  browserAccessHelper.assertEmptyTable(
+    browserAccessHelper.LOCATORS.applicationTable1
+  );
+  browserAccessHelper.assertSave(browserAccessHelper.MSG.savedSuccessfully);
 });
