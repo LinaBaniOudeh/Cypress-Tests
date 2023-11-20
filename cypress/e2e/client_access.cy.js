@@ -1,5 +1,5 @@
 /// <reference types="Cypress"/>
-import * as clientAccessHelper from "../support/client_access_helper.cy.js";
+import * as clientAccessHelper from "../support/client_access_helper.js";
 import * as loginHelper from "../support/login_to_system_helper.js";
 
 import { it } from "mocha";
@@ -165,12 +165,12 @@ describe("Ckient Access Page", () => {
       clientAccessHelper.LOCATORS.osCertificateTable,
       operatingSystemsList
     );
-    // clientAccessHelper.deleteRowByIndex(clientAccessHelper.LOCATORS.osCertificateTable, 0)
-    // cy.wait(500)
-    // clientAccessHelper.assertTextContent(
-    //   clientAccessHelper.LOCATORS.tableError,
-    //   clientAccessHelper.PAGE_CONTENT.uploadCertificate
-    // );
+    clientAccessHelper.deleteRowByIndex(clientAccessHelper.LOCATORS.osCertificateTable, 0)
+    cy.wait(1000)
+    clientAccessHelper.assertTextContent(
+      clientAccessHelper.LOCATORS.tableError,
+      clientAccessHelper.PAGE_CONTENT.uploadCertificate
+    );
     clientAccessHelper.assertSave(clientAccessHelper.MSG.savedSuccessfully);
   });
 

@@ -16,6 +16,8 @@ export const CLIENT_CUSTOMIZATION_URL =
 
 export const CLIENT_ACCESS_URL =
   "https://leena-testing.cc.test.catonet.works/#/account/90344/settings;AccountVpnSettings";
+export const BROWSER_ACCESS_URL =
+  "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;BrowserAccess";
 
 export const LOGIN_CREDENTIALS = [
   {
