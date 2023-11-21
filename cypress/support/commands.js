@@ -29,14 +29,15 @@ Cypress.Commands.add('waitUntilElementNotExists', { prevSubject: true }, (subjec
     cy.wrap(subject).should('not.exist', { timeout: 10000 });
   });
   
-Cypress.Commands.add('bypassLogin', (name, password) => {
+Cypress.Commands.add('bypassLogin', (name, password, url) => {
     cy.session([name, password], () => {
-            cy.visit(loginHelper.LOGIN_URL)
+            cy.visit(url)
             cy.get(loginHelper.LOCATORS.userNameField).type(name);
             cy.get(loginHelper.LOCATORS.passwordField).type(password);
             cy.get(loginHelper.LOCATORS.submitButton).click();
         },
-        {
-            cacheAcrossSpecs:true
-        })
+        // {
+        //     // cacheAcrossSpecs:true
+        // }
+        )
  });

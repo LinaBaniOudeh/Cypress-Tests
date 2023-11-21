@@ -8,7 +8,8 @@ describe("Browser Access Page", () => {
   before(() => {
     cy.bypassLogin(
       loginHelper.LOGIN_CREDENTIALS[0].userName,
-      loginHelper.LOGIN_CREDENTIALS[0].password
+      loginHelper.LOGIN_CREDENTIALS[0].password,
+      loginHelper.LOGIN_URL
     );
     loginHelper.navigateToURL(loginHelper.BROWSER_ACCESS_URL);
   });

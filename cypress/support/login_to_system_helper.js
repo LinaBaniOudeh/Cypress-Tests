@@ -19,10 +19,16 @@ export const CLIENT_ACCESS_URL =
 export const BROWSER_ACCESS_URL =
   "https://leena-testing.cc.test.catonet.works/?#/account/90344/settings;BrowserAccess";
 
+export const SYSTEM_CMA_URL = "https://system.cc.test.catonet.works/#/account/54556/users"
+
 export const LOGIN_CREDENTIALS = [
   {
     userName: "leena.baniodeh@exalt.ps",
     password: "Lena.1999",
+  },
+  {
+    userName: "hiba.duaraidi@exalt.ps",
+    password: "hibaexalt8822",
   },
 ];
 
