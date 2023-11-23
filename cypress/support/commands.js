@@ -1,4 +1,6 @@
 import * as loginHelper from "../support/login_to_system_helper";
+import * as revliteHelper from "../support/revlite_helper";
+
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -25,19 +27,30 @@ import * as loginHelper from "../support/login_to_system_helper";
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-Cypress.Commands.add('waitUntilElementNotExists', { prevSubject: true }, (subject) => {
-    cy.wrap(subject).should('not.exist', { timeout: 10000 });
-  });
-  
-Cypress.Commands.add('bypassLogin', (name, password, url) => {
-    cy.session([name, password], () => {
-            cy.visit(url)
-            cy.get(loginHelper.LOCATORS.userNameField).type(name);
-            cy.get(loginHelper.LOCATORS.passwordField).type(password);
-            cy.get(loginHelper.LOCATORS.submitButton).click();
-        },
-        // {
-        //     // cacheAcrossSpecs:true
-        // }
-        )
- });
+Cypress.Commands.add(
+  "waitUntilElementNotExists",
+  { prevSubject: true },
+  (subject) => {
+    cy.wrap(subject).should("not.exist", { timeout: 10000 });
+  }
+);
+
+Cypress.Commands.add("bypassLogin", (name, password, url) => {
+  cy.session(
+    [name, password],
+    () => {
+      cy.visit(url);
+      cy.get(loginHelper.LOCATORS.userNameField).type(name);
+      cy.get(loginHelper.LOCATORS.passwordField).type(password);
+      cy.get(loginHelper.LOCATORS.submitButton).click();
+    }
+    // {
+    //     // cacheAcrossSpecs:true
+    // }
+  );
+});
+
+Cypress.Commands.add("setDevicesData", (data) => {
+  cy.wrap(data).as("devicesData");
+});
+

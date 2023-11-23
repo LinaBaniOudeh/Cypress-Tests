@@ -1,6 +1,7 @@
 /// <reference types="Cypress"/>
 import * as revliteHelper from "../support/revlite_helper.js";
 import * as loginHelper from "../support/login_to_system_helper.js";
+import { aliasQuery, aliasMutation } from "../support/revlite_helper.js";
 
 import { it } from "mocha";
 describe("revlite Page", () => {
@@ -42,4 +43,26 @@ describe("revlite Page", () => {
       false
     );
   });
+
+  it.only("intercept device checks", () => {
+    revliteHelper.navigateToURL(revliteHelper.DEVICE_CHECKS_URL);
+    cy.intercept("POST", "/api/v1/graphql", (req) => {
+      // Queries
+      aliasQuery(req, "account");
+    });
+    cy.reload(); //trigger the request
+    cy.wait("@gqlaccountQuery").then((interception) => {
+      const response = interception.response.body;
+      const formattedArray = revliteHelper.extractionLogic(response);
+      cy.setDevicesData(formattedArray);
+    });
+    revliteHelper.navigateToRevlite(true);
+
+
+    // cy.get("@devicesData").then((devicesData) => {
+    //   // Log the devices data
+    //   cy.log("Devices Data:", devicesData);
+    // });
+  });
+
 });

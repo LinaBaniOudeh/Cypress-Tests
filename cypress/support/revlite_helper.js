@@ -18,6 +18,8 @@ export const LOCATORS = {
   code: "code",
 };
 
+export const DEVICE_CHECKS_URL =
+  "https://system.cc.test.catonet.works/?#/account/54556/settings;DevicePosture?currentTab=%22tests%22";
 export const REVLITE_URL =
   "https://system.cc2.test.catonet.works/catoadmin#!/revlite?start=1700517600453&end=1700517600453&accountId=54556";
 
@@ -32,14 +34,6 @@ export const PAGE_CONTENT = {
   vpnClientAuthenticationInOffice: "vpn_client_authenticationInOffice",
 };
 
-export const ACCOUNT_ID = "54556";
-
-export function assertCodeSelectorBoolean(targetText, expectedValue) {
-  const expectedText = `"${targetText}": ${expectedValue}`;
-
-  cy.get(LOCATORS.code).should("be.visible").contains(expectedText);
-}
-
 export function navigateToRevlite(adminArea) {
   clickButton(LOCATORS.avatar);
   clickButton(LOCATORS.adminPage);
@@ -52,6 +46,7 @@ export function navigateToRevlite(adminArea) {
   cy.wait(10000);
   clickButton(LOCATORS.accountID);
 }
+
 export function doubleClickButton(selector) {
   cy.get(selector).dblclick();
 }
@@ -118,4 +113,36 @@ export function setCheckboxAndAssert(selector, checked) {
   } else {
     checkbox.uncheck({ force: true }).should("not.be.checked");
   }
+}
+
+export const hasOperationName = (req, operationName) => {
+  const { body } = req;
+  return (
+    Object.prototype.hasOwnProperty.call(body, "operationName") &&
+    body.operationName === operationName
+  );
+};
+
+// Alias query if operationName matches
+export const aliasQuery = (req, operationName) => {
+  if (hasOperationName(req, operationName)) {
+    req.alias = `gql${operationName}Query`;
+  }
+};
+
+export function extractionLogic(response) {
+  const extractedDevices =
+    response.data.account.accessSettings.deviceAccessTests;
+  const formattedDevices = extractedDevices.map((device) => {
+    return {
+      name: device.name,
+      id: device.id,
+      descreption: device.descreption,
+      allow_unsupported_clients: device.allowUnsupportedClients,
+      real_time_protection: device.realTimeProtection,
+      product_type:
+    };
+  });
+
+  return formattedDevices;
 }
