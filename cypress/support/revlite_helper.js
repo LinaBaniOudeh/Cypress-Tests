@@ -28,11 +28,24 @@ export const MSG = {
   savedSuccessfully: "Saved successfully",
 };
 
+export const GraphQl = {
+  post:"POST",
+  endpoint:"/api/v1/graphql",
+  operationName:"account",
+  alias:"@gqlaccountQuery"
+}
+
 export const PAGE_CONTENT = {
   vpnClientUserFeedbackFromClientEnabled:
     "vpn_client_userFeedbackFromClientEnabled",
   vpnClientAuthenticationInOffice: "vpn_client_authenticationInOffice",
 };
+
+export function assertCodeSelectorBoolean(targetText, expectedValue) {
+  const expectedText = `"${targetText}": ${expectedValue}`;
+
+  cy.get(LOCATORS.code).should("be.visible").contains(expectedText);
+}
 
 export function navigateToRevlite(adminArea) {
   clickButton(LOCATORS.avatar);
@@ -134,15 +147,47 @@ export function extractionLogic(response) {
   const extractedDevices =
     response.data.account.accessSettings.deviceAccessTests;
   const formattedDevices = extractedDevices.map((device) => {
-    return {
+    const formattedDevices = {
       name: device.name,
       id: device.id,
-      descreption: device.descreption,
-      allow_unsupported_clients: device.allowUnsupportedClients,
-      real_time_protection: device.realTimeProtection,
-      product_type:
+      // descreption: device.descreption,
+      // allow_unsupported_clients: device.allowUnsupportedClients,
+      // product_type: device.type,
     };
+    if (device.products && device.products.length > 0) {
+      formattedDevices.display_name =
+        device.products[0].vendor.name + " " + device.products[0].product.name;
+    }
+    return formattedDevices;
+  });
+  return formattedDevices;
+}
+
+export function interceptingGraphql(){
+  cy.intercept(GraphQl.post, GraphQl.endpoint, (req) => {
+    // Queries
+    aliasQuery(req, GraphQl.operationName);
+  });
+  cy.reload(); //trigger the request
+  cy.wait(GraphQl.alias).then((interception) => {
+    const response = interception.response.body;
+    const formattedArray = extractionLogic(response);
+    cy.setDevicesData(formattedArray);
+  });
+}
+
+export function assertCellContent(){
+  cy.get("@devicesData").then((devicesData) => {
+    cy.log("Devices Data:", JSON.stringify(devicesData, null, 2));
+
+    // Iterate through each device in devicesData
+    devicesData.forEach((device) => {
+      // Iterate through each value in the device object
+      Object.values(device).forEach((value) => {
+        cy.log(value)
+        cy.get(LOCATORS.code).should("be.visible").contains(value);
+      });
+    });
   });
 
-  return formattedDevices;
 }

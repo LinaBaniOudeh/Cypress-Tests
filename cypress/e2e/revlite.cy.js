@@ -44,25 +44,11 @@ describe("revlite Page", () => {
     );
   });
 
-  it.only("intercept device checks", () => {
+  it.only("intercept device checks and validate matching data in revlite", () => {
     revliteHelper.navigateToURL(revliteHelper.DEVICE_CHECKS_URL);
-    cy.intercept("POST", "/api/v1/graphql", (req) => {
-      // Queries
-      aliasQuery(req, "account");
-    });
-    cy.reload(); //trigger the request
-    cy.wait("@gqlaccountQuery").then((interception) => {
-      const response = interception.response.body;
-      const formattedArray = revliteHelper.extractionLogic(response);
-      cy.setDevicesData(formattedArray);
-    });
+    revliteHelper.interceptingGraphql()
     revliteHelper.navigateToRevlite(true);
+    revliteHelper.assertCellContent()
 
-
-    // cy.get("@devicesData").then((devicesData) => {
-    //   // Log the devices data
-    //   cy.log("Devices Data:", devicesData);
-    // });
   });
-
 });
