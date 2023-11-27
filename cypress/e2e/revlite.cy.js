@@ -46,10 +46,10 @@ describe("revlite Page", () => {
   });
 
 
-  it.only("intercept device checks and validate matching data in revlite", () => {
+  it("intercept device checks and validate matching data in revlite", () => {
     revliteHelper.navigateToURL(revliteHelper.DEVICE_CHECKS_URL);
     revliteHelper.interceptingGraphql().then((response) => {
-      const formattedArray = revliteHelper.extractionLogic(response);
+      const formattedArray = revliteHelper.extractionLogic(response, revliteHelper.DEVICE_CHECKS_REVLITE);
 
       revliteHelper.navigateToRevlite(true);
       revliteHelper.assertContent(formattedArray);
@@ -57,24 +57,28 @@ describe("revlite Page", () => {
 
   });
 
-  it("edit device checks", () => {
+  it.only("Test edit device checks", () => {
     revliteHelper.navigateToURL(revliteHelper.DEVICE_CHECKS_URL);
     devicePostureHelper.addNewDeviceCheck(
-      devicePostureHelper.DEVICE_CHECKS_DATA[5],
+      revliteHelper.MODIFIED_CHECK2,
       true
     );
     revliteHelper.assertSave(revliteHelper.MSG.savedSuccessfully);
+    revliteHelper.navigateToURL(revliteHelper.DEVICE_CHECKS_URL);
+    revliteHelper.interceptingGraphql().then((response) => {
+      const formattedArray = revliteHelper.extractionLogic(response, revliteHelper.MODIFIED_DEVICE_CHECKS_REVLITE);
+
+      revliteHelper.navigateToRevlite(true);
+      revliteHelper.assertContent(formattedArray);
+    });
   });
 
-  it("test id replace ", () => {
-    const dynamicId = "12345";
-
-    const dynamicDeviceCheck = revliteHelper.generateDeviceCheckRevLite(
-      revliteHelper.DEVICE_CHECKS_REVLITE[0],
-      dynamicId
+  it.only("Teardown", () => {
+    revliteHelper.navigateToURL(revliteHelper.DEVICE_CHECKS_URL);
+    devicePostureHelper.addNewDeviceCheck(
+      revliteHelper.CHECK2,
+      true
     );
-
-    // Now, use dynamicDeviceCheck in your Cypress test
-    cy.log(JSON.stringify(dynamicDeviceCheck));
+    revliteHelper.assertSave(revliteHelper.MSG.savedSuccessfully);
   });
 });

@@ -26,6 +26,47 @@ export const DEVICE_CHECKS_REVLITE =
  {"id":"{{ID_PLACEHOLDER}}","name":"check3","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, antimalware,1566,3128,(version>=\'12.7.X\'),enabled)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]},{"field_name":"os_type","op":"OP_EQ","values":[{"type":"field_type_netorder_uint","num":"4"}]}]}]},"display_name":"adaware adaware antivirus version 12.7.X and above","allow_unsupported_clients":true,"product_type":"antimalware"}
 ]
 
+export const MODIFIED_DEVICE_CHECKS_REVLITE =
+[{"id":"{{ID_PLACEHOLDER}}","name":"check1","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, antimalware,256,564)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]},{"field_name":"os_type","op":"OP_EQ","values":[{"type":"field_type_netorder_uint","num":"4"}]}]}]},"display_name":"AVG Technologies CZ, s.r.o. AVG AntiVirus","allow_unsupported_clients":false,"product_type":"antimalware"},
+{"id":"{{ID_PLACEHOLDER}}","name":"check2","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, antimalware,1224,2051)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]},{"field_name":"os_type","op":"OP_EQ","values":[{"type":"field_type_netorder_uint","num":"4"}]}]}]},"display_name":"TELUS TELUS security services","allow_unsupported_clients":false,"product_type":"antimalware"},
+{"id":"{{ID_PLACEHOLDER}}","name":"Disk1","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, disk_encryption,Any,Any,(encrypted_partition==\"C:\\\\\"), encryption_active, state_encrypted)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]}]}]},"display_name":"disk encryption: partition 'C:\\' (encryption_active, state_encrypted)","allow_unsupported_clients":false,"product_type":"disk_encryption"},
+{"id":"{{ID_PLACEHOLDER}}","name":"cer","rule":{"op":"BOOL_OR","predicate":[{"field_name":"certificate","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]}]},"display_name":"Certificate","allow_unsupported_clients":true,"product_type":"certificate"},
+{"id":"{{ID_PLACEHOLDER}}","name":"check3","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, antimalware,1566,3128,(version>=\'12.7.X\'),enabled)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]},{"field_name":"os_type","op":"OP_EQ","values":[{"type":"field_type_netorder_uint","num":"4"}]}]}]},"display_name":"adaware adaware antivirus version 12.7.X and above","allow_unsupported_clients":true,"product_type":"antimalware"}
+]
+
+export const MODIFIED_CHECK2 = {
+  //General
+  deviceTestType: "Anti-malware",
+  name: "check2",
+  description: "",
+  //Vendor
+  os: "Windows",
+  vendor: "TELUS",
+  product: "TELUS security services",
+  version: "any version", //versionNumber will disappear
+  versionNumber: "",
+  //Criteria
+  realTimeProtectionEnabled: false,
+  bypassDeviceCheckforunsupportedSDPClients: false,
+}
+
+
+export const CHECK2 = {
+  //General
+  deviceTestType: "Anti-malware",
+  name: "check2",
+  description: "",
+  //Vendor
+  os: "Windows",
+  vendor: "TotalAV",
+  product: "TotalAV",
+  version: "any version", //versionNumber will disappear
+  versionNumber: "",
+  //Criteria
+  realTimeProtectionEnabled: false,
+  bypassDeviceCheckforunsupportedSDPClients: false,
+}
+
 export const DEVICE_CHECKS_URL =
   "https://system.cc.test.catonet.works/?#/account/54556/settings;DevicePosture?currentTab=%22tests%22";
 export const REVLITE_URL =
@@ -151,12 +192,12 @@ export const aliasQuery = (req, operationName) => {
   }
 };
 
-export function extractionLogic(response) {
+export function extractionLogic(response, revliteArray) {
   const extractedDevices =
     response.data.account.accessSettings.deviceAccessTests;
 
   // Use map to transform the devices and substitute the id
-  const formattedDevices = DEVICE_CHECKS_REVLITE.map((device, index) => {
+  const formattedDevices = revliteArray.map((device, index) => {
     if (extractedDevices[index]) {
       return {
         ...device,

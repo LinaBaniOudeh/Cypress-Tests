@@ -75,6 +75,7 @@ export const LOCATORS = {
   dialogContent: '[data-testid="catodialog-content"]',
   dialogActionButton: '[data-testid="catodialog-actions"] button',
   sideBarTitle: ".MuiV5-Paper-root h3",
+  cellNameSelector:'[data-testid="device_tests-row-cell-name"]'
 };
 
 export const TYPES = [
@@ -318,8 +319,8 @@ export function chooseFromDropDown(dropdownSelector, optionText, listSelector) {
 export function addNewDeviceCheck(data, editFlag) {
   if (editFlag) {
     cy.get(LOCATORS.deviceChecksTable2)
-      .contains("td", data.name) // Look for the 'device6' text in any td element
-      .parent("tr") // Find the parent row (tr)
+      .contains(LOCATORS.cellNameSelector, data.name) // Look for the 'device6' text in any td element
+      // .parent("tr") // Find the parent row (tr)
       .click();
   } else {
     cy.get(LOCATORS.newButton).click();
