@@ -18,6 +18,14 @@ export const LOCATORS = {
   code: "code",
 };
 
+export const DEVICE_CHECKS_REVLITE = 
+[{"id":"{{ID_PLACEHOLDER}}","name":"check1","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, antimalware,256,564)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]},{"field_name":"os_type","op":"OP_EQ","values":[{"type":"field_type_netorder_uint","num":"4"}]}]}]},"display_name":"AVG Technologies CZ, s.r.o. AVG AntiVirus","allow_unsupported_clients":false,"product_type":"antimalware"},
+ {"id":"{{ID_PLACEHOLDER}}","name":"check2","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, antimalware,1684,3029)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]},{"field_name":"os_type","op":"OP_EQ","values":[{"type":"field_type_netorder_uint","num":"4"}]}]}]},"display_name":"TotalAV TotalAV","allow_unsupported_clients":false,"product_type":"antimalware"},
+ {"id":"{{ID_PLACEHOLDER}}","name":"Disk1","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, disk_encryption,Any,Any,(encrypted_partition==\"C:\\\\\"), encryption_active, state_encrypted)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]}]}]},"display_name":"disk encryption: partition 'C:\\' (encryption_active, state_encrypted)","allow_unsupported_clients":false,"product_type":"disk_encryption"},
+ {"id":"{{ID_PLACEHOLDER}}","name":"cer","rule":{"op":"BOOL_OR","predicate":[{"field_name":"certificate","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]}]},"display_name":"Certificate","allow_unsupported_clients":true,"product_type":"certificate"},
+ {"id":"{{ID_PLACEHOLDER}}","name":"check3","rule":{"op":"BOOL_OR","expression":[{"op":"BOOL_AND","predicate":[{"field_name":"check_posture(device_posture, antimalware,1566,3128,(version>=\'12.7.X\'),enabled)","op":"OP_EQ","values":[{"type":"field_type_bool","num":"1"}]},{"field_name":"os_type","op":"OP_EQ","values":[{"type":"field_type_netorder_uint","num":"4"}]}]}]},"display_name":"adaware adaware antivirus version 12.7.X and above","allow_unsupported_clients":true,"product_type":"antimalware"}
+]
+
 export const DEVICE_CHECKS_URL =
   "https://system.cc.test.catonet.works/?#/account/54556/settings;DevicePosture?currentTab=%22tests%22";
 export const REVLITE_URL =
@@ -29,11 +37,11 @@ export const MSG = {
 };
 
 export const GraphQl = {
-  post:"POST",
-  endpoint:"/api/v1/graphql",
-  operationName:"account",
-  alias:"@gqlaccountQuery"
-}
+  post: "POST",
+  endpoint: "/api/v1/graphql",
+  operationName: "account",
+  alias: "@gqlaccountQuery",
+};
 
 export const PAGE_CONTENT = {
   vpnClientUserFeedbackFromClientEnabled:
@@ -146,48 +154,55 @@ export const aliasQuery = (req, operationName) => {
 export function extractionLogic(response) {
   const extractedDevices =
     response.data.account.accessSettings.deviceAccessTests;
-  const formattedDevices = extractedDevices.map((device) => {
-    const formattedDevices = {
-      name: device.name,
-      id: device.id,
-      // descreption: device.descreption,
-      // allow_unsupported_clients: device.allowUnsupportedClients,
-      // product_type: device.type,
-    };
-    if (device.products && device.products.length > 0) {
-      formattedDevices.display_name =
-        device.products[0].vendor.name + " " + device.products[0].product.name;
+
+  // Use map to transform the devices and substitute the id
+  const formattedDevices = DEVICE_CHECKS_REVLITE.map((device, index) => {
+    if (extractedDevices[index]) {
+      return {
+        ...device,
+        id: extractedDevices[index].id,
+      };
     }
-    return formattedDevices;
   });
+
   return formattedDevices;
 }
 
-export function interceptingGraphql(){
+export function interceptingGraphql() {
   cy.intercept(GraphQl.post, GraphQl.endpoint, (req) => {
-    // Queries
     aliasQuery(req, GraphQl.operationName);
   });
-  cy.reload(); //trigger the request
-  cy.wait(GraphQl.alias).then((interception) => {
-    const response = interception.response.body;
-    const formattedArray = extractionLogic(response);
-    cy.setDevicesData(formattedArray);
+  cy.reload(); 
+  return cy.wait(GraphQl.alias).then((interception) => {
+    return interception.response.body; 
   });
 }
 
-export function assertCellContent(){
-  cy.get("@devicesData").then((devicesData) => {
-    cy.log("Devices Data:", JSON.stringify(devicesData, null, 2));
-
+export function assertContent(devicesData){
+  cy.get(LOCATORS.code)
+  .should("be.visible")
+  .invoke("text")
+  .then((actualText) => {
+    const cleanedActualText = actualText.replace(/\s/g, "");
     // Iterate through each device in devicesData
     devicesData.forEach((device) => {
-      // Iterate through each value in the device object
-      Object.values(device).forEach((value) => {
-        cy.log(value)
-        cy.get(LOCATORS.code).should("be.visible").contains(value);
+      const deviceString = JSON.stringify(device, null, 2).replace(/\s/g, "");
+
+      // Replace Unicode escape sequences in cleanedActualText
+      const cleanedActualTextWithoutUnicode = cleanedActualText.replace(/\\u[\dA-Fa-f]{4}/g, (match) => {
+        return String.fromCharCode(parseInt(match.substring(2), 16));
       });
+
+      expect(cleanedActualTextWithoutUnicode).to.include(deviceString);
     });
   });
 
+}
+
+
+export function generateDeviceCheckRevLite(deviceTemplate, dynamicId) {
+  return {
+    ...deviceTemplate,
+    id: deviceTemplate.id.replace("{{ID_PLACEHOLDER}}", dynamicId),
+  };
 }

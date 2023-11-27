@@ -73,7 +73,8 @@ export const LOCATORS = {
   continueButton: '[data-testid="catobutton-generic"]:nth(1)',
   dialogTitle: '[data-testid="catodialog-title"]',
   dialogContent: '[data-testid="catodialog-content"]',
-  dialogActionButton:'[data-testid="catodialog-actions"] button'
+  dialogActionButton: '[data-testid="catodialog-actions"] button',
+  sideBarTitle: ".MuiV5-Paper-root h3",
 };
 
 export const TYPES = [
@@ -234,6 +235,21 @@ export const DEVICE_CHECKS_DATA = [
     description: "description6",
     //Vendor
     os: "Linux",
+    vendor: "Avira GmbH",
+    product: "Avira AntiVir PersonalEdition Classic",
+    version: "any version", //versionNumber will disappear
+    versionNumber: "",
+    //Criteria
+    realTimeProtectionEnabled: false,
+    bypassDeviceCheckforunsupportedSDPClients: true,
+  },
+  {
+    //General
+    deviceTestType: "Anti-malware",
+    name: "check55",
+    description: "description6",
+    //Vendor
+    os: "Linux",
     vendor: "Cisco Systems, Inc.",
     product: "ClamAV",
     version: "any version", //versionNumber will disappear
@@ -299,8 +315,15 @@ export function chooseFromDropDown(dropdownSelector, optionText, listSelector) {
     .click();
 }
 
-export function addNewDeviceCheck(data) {
-  cy.get(LOCATORS.newButton).click();
+export function addNewDeviceCheck(data, editFlag) {
+  if (editFlag) {
+    cy.get(LOCATORS.deviceChecksTable2)
+      .contains("td", data.name) // Look for the 'device6' text in any td element
+      .parent("tr") // Find the parent row (tr)
+      .click();
+  } else {
+    cy.get(LOCATORS.newButton).click();
+  }
   expandDropdownIfNotExpanded(LOCATORS.general);
   fillGeneralSection(data);
   fillVendorSection(data);
@@ -309,12 +332,18 @@ export function addNewDeviceCheck(data) {
 }
 
 function fillGeneralSection(data) {
-  chooseFromDropDown(
-    LOCATORS.deviceTestType,
-    data.deviceTestType,
-    LOCATORS.deviceTypelistBox
-  );
+  cy.get(LOCATORS.sideBarTitle).then(($element) => {
+    const elementText = $element.text();
+    if (elementText.includes("New Device Check")) {
+      chooseFromDropDown(
+        LOCATORS.deviceTestType,
+        data.deviceTestType,
+        LOCATORS.deviceTypelistBox
+      );
+    }
+  });
   typeValidInput(LOCATORS.nameField, data.name);
+
   if (data.description !== "") {
     typeValidInput(LOCATORS.descriptionField, data.description);
   }
